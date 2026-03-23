@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Les 12 Coups de Midi – L'Épreuve de Théo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --gold: #F5C518;
+      --gold-dark: #d4a800;
+      --red: #D40000;
+      --blue-dark: #0a0a2a;
+      --blue-mid: #12124a;
+      --white: #ffffff;
+      --gray: #ccc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--blue-dark);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold), #ffe566, var(--gold));
+      text-align: center;
+      padding: 18px 20px 14px;
+      box-shadow: 0 4px 20px rgba(245,197,24,0.5);
+      position: relative;
+    }
+    header::before, header::after {
+      content: "☀";
+      font-size: 2rem;
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      color: var(--gold-dark);
+    }
+    header::before { left: 20px; }
+    header::after  { right: 20px; }
+
+    header h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(1.6rem, 5vw, 3rem);
+      color: var(--blue-dark);
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+      line-height: 1.1;
+    }
+    header p.subtitle {
+      color: var(--blue-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    /* ── CHAMPION BANNER ── */
+    .champion-banner {
+      background: linear-gradient(90deg, var(--red), #a00000, var(--red));
+      text-align: center;
+      padding: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .champion-banner span { color: var(--gold); }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+    /* ── WELCOME ── */
+    #screen-welcome {
+      padding: 40px 20px;
+      text-align: center;
+      gap: 24px;
+    }
+    .welcome-card {
+      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 36px 40px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(245,197,24,0.3);
+    }
+    .emoji-big { font-size: 4rem; margin-bottom: 12px; }
+    .welcome-card h2 {
+      font-family: 'Anton', sans-serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .welcome-card p {
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 0.97rem;
+    }
+    .welcome-card p strong { color: var(--white); }
+
+    .emilien-box {
+      background: rgba(245,197,24,0.1);
+      border: 2px dashed var(--gold);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+      color: var(--gold);
+      font-style: italic;
+    }
+    .emilien-box strong { color: var(--white); font-style: normal; }
+
+    .strike-select-label {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+    .strike-select {
+      background: var(--blue-dark);
+      border: 2px solid var(--gold);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 24px;
+      cursor: pointer;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 1.5px;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--blue-dark);
+      box-shadow: 0 4px 18px rgba(245,197,24,0.45);
+    }
+    .btn-gold:hover { transform: scale(1.05); box-shadow: 0 6px 26px rgba(245,197,24,0.6); }
+    .btn-red  {
+      background: linear-gradient(135deg, #a00000, var(--red));
+      color: var(--white);
+      box-shadow: 0 4px 18px rgba(212,0,0,0.4);
+    }
+    .btn-red:hover { transform: scale(1.05); }
+
+    /* ── GAME SCREEN ── */
+    #screen-game {
+      padding: 20px 16px 40px;
+      gap: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .hud-score, .hud-lives, .hud-round {
+      background: var(--blue-mid);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 8px 18px;
+      text-align: center;
+      flex: 1;
+      min-width: 90px;
+    }
+    .hud-label { font-size: 0.65rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+    .hud-value { font-family: 'Anton', sans-serif; font-size: 1.5rem; color: var(--white); }
+
+    /* TIMER */
+    .timer-wrap {
+      width: 100%;
+      background: #0a0a2a;
+      border-radius: 12px;
+      border: 2px solid var(--gold);
+      overflow: hidden;
+      height: 14px;
+      position: relative;
+    }
+    .timer-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), #ffe566);
+      transition: width 1s linear, background 0.5s;
+      width: 100%;
+    }
+    .timer-bar.danger { background: linear-gradient(90deg, #a00000, var(--red)); }
+
+    /* CATEGORY BADGE */
+    .category-badge {
+      background: rgba(245,197,24,0.12);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.78rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* QUESTION CARD */
+    .question-card {
+      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
+      border: 3px solid var(--gold);
+      border-radius: 18px;
+      padding: 28px 32px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(245,197,24,0.2);
+    }
+    .question-text {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 600;
+      line-height: 1.55;
+      margin-bottom: 6px;
+      color: var(--white);
+      text-align: center;
+    }
+    .question-num {
+      font-size: 0.78rem;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 4px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    /* ANSWERS */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+    @media (max-width: 480px) { .answers-grid { grid-template-columns: 1fr; } }
+
+    .answer-btn {
+      background: var(--blue-mid);
+      border: 2px solid rgba(245,197,24,0.35);
+      border-radius: 14px;
+      color: var(--white);
+      padding: 16px 14px;
+      font-size: 0.95rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-align: center;
+      position: relative;
+    }
+    .answer-btn:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: rgba(245,197,24,0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(245,197,24,0.25);
+    }
+    .answer-btn .letter {
+      display: inline-block;
+      width: 26px; height: 26px;
+      background: var(--gold);
+      color: var(--blue-dark);
+      border-radius: 50%;
+      font-family: 'Anton', sans-serif;
+      font-size: 0.85rem;
+      line-height: 26px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .answer-btn.correct {
+      background: rgba(0,200,80,0.25);
+      border-color: #00c850;
+      color: #7fffb5;
+      animation: pulse-correct 0.4s;
+    }
+    .answer-btn.wrong {
+      background: rgba(200,0,0,0.25);
+      border-color: var(--red);
+      color: #ff8080;
+      animation: shake 0.3s;
+    }
+    .answer-btn:disabled { cursor: default; }
+
+    @keyframes pulse-correct {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      60% { transform: translateX(6px); }
+    }
+
+    /* FEEDBACK */
+    .feedback-banner {
+      background: var(--blue-mid);
+      border-radius: 14px;
+      padding: 14px 22px;
+      text-align: center;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+      border: 2px solid transparent;
+      line-height: 1.5;
+    }
+    .feedback-banner.show { display: block; }
+    .feedback-banner.ok  { border-color: #00c850; color: #7fffb5; }
+    .feedback-banner.ko  { border-color: var(--red); color: #ff8080; }
+
+    /* ANECDOTE EMILIEN */
+    .emilien-tip {
+      background: rgba(245,197,24,0.08);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 18px;
+      font-size: 0.88rem;
+      color: var(--gold);
+      font-style: italic;
+      width: 100%;
+      display: none;
+    }
+    .emilien-tip.show { display: block; }
+
+    /* STRIKES */
+    .strikes-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .strike-icon {
+      width: 38px; height: 38px;
+      background: var(--blue-mid);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .strike-icon.done {
+      background: var(--gold);
+      border-color: var(--gold-dark);
+      animation: pop 0.3s;
+    }
+    .strike-icon.current {
+      box-shadow: 0 0 12px var(--gold);
+      border-color: #ffe566;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.7); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── END SCREEN ── */
+    #screen-end {
+      padding: 40px 20px;
+      text-align: center;
+      gap: 22px;
+    }
+    .end-card {
+      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 36px 40px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 0 50px rgba(245,197,24,0.3);
+    }
+    .end-card h2 {
+      font-family: 'Anton', sans-serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin: 12px 0 8px;
+    }
+    .end-score {
+      font-family: 'Anton', sans-serif;
+      font-size: 4rem;
+      color: var(--white);
+      line-height: 1;
+    }
+    .end-score span { font-size: 1.5rem; color: var(--gold); }
+    .end-msg { color: var(--gray); font-size: 0.95rem; line-height: 1.6; margin: 14px 0 22px; }
+    .end-msg strong { color: var(--white); }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(245,197,24,0.3);
+      border-radius: 12px;
+      padding: 12px 20px;
+      text-align: center;
+    }
+    .stat-val { font-family: 'Anton', sans-serif; font-size: 1.8rem; color: var(--gold); }
+    .stat-lbl { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+
+    .end-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      top: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--blue-dark);
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+      padding: 12px 30px;
+      border-radius: 50px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+
+    /* STARS ANIMATION */
+    .confetti-star {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.5rem;
+      animation: fall 2s ease-in forwards;
+      z-index: 998;
+    }
+    @keyframes fall {
+      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(80vh) rotate(720deg); }
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 14px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+      border-top: 1px solid rgba(245,197,24,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ LES 12 COUPS DE MIDI ⚡</h1>
+  <p class="subtitle">L'Épreuve de Théo — Inspirée d'Émilien</p>
+</header>
+<div class="champion-banner">
+  🏆 En hommage au grand champion <span>Émilien</span> — Le maître de la culture générale 🏆
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════ WELCOME ═══════════════ -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-card">
+    <div class="emoji-big">🌟</div>
+    <h2>Bonjour Théo !</h2>
+    <p>
+      Bienvenue dans <strong>ta version des 12 Coups de Midi</strong> !
+      Réponds aux questions de culture générale, comme ton idole
+      <strong>Émilien</strong>, et accumule un maximum de points !
+    </p>
+    <div class="emilien-box">
+      💬 <strong>Le conseil d'Émilien :</strong> « Lis beaucoup, écoute tout,
+      observe partout — la culture générale se nourrit de curiosité ! »
+    </div>
+    <p class="strike-select-label">Combien de questions veux-tu jouer ?</p>
+    <select class="strike-select" id="select-rounds">
+      <option value="6">6 questions – Entraînement</option>
+      <option value="12" selected>12 questions – Le Grand Jeu</option>
+      <option value="20">20 questions – Mode Champion</option>
+    </select>
+    <br>
+    <button class="btn btn-gold" onclick="startGame()">🎬 COMMENCER LE JEU</button>
+  </div>
+</div>
+
+<!-- ═══════════════ GAME ═══════════════ -->
+<div class="screen" id="screen-game">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-round">
+      <div class="hud-label">Question</div>
+      <div class="hud-value" id="hud-round">1 / 12</div>
+    </div>
+    <div class="hud-score">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="hud-score">0</div>
+    </div>
+    <div class="hud-lives">
+      <div class="hud-label">Vies</div>
+      <div class="hud-value" id="hud-lives">❤️❤️❤️</div>
+    </div>
+  </div>
+
+  <!-- TIMER -->
+  <div class="timer-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+
+  <!-- STRIKES -->
+  <div class="strikes-row" id="strikes-row"></div>
+
+  <!-- CATEGORY -->
+  <div class="category-badge" id="category-badge">Culture Générale</div>
+
+  <!-- QUESTION -->
+  <div class="question-card">
+    <div class="question-num" id="question-num">Question 1</div>
+    <div class="question-text" id="question-text">Chargement...</div>
+  </div>
+
+  <!-- ANSWERS -->
+  <div class="answers-grid" id="answers-grid"></div>
+
+  <!-- FEEDBACK -->
+  <div class="feedback-banner" id="feedback"></div>
+
+  <!-- EMILIEN TIP -->
+  <div class="emilien-tip" id="emilien-tip"></div>
+
+</div>
+
+<!-- ═══════════════ END ═══════════════ -->
+<div class="screen" id="screen-end">
+  <div class="end-card">
+    <div id="end-emoji" style="font-size:4rem"></div>
+    <h2 id="end-title">Bien joué !</h2>
+    <div class="end-score" id="end-score">0 <span>pts</span></div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-val" id="stat-correct">0</div>
+        <div class="stat-lbl">Bonnes rép.</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-wrong">0</div>
+        <div class="stat-lbl">Mauvaises</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-pct">0%</div>
+        <div class="stat-lbl">Réussite</div>
+      </div>
+    </div>
+    <p class="end-msg" id="end-msg"></p>
+    <div class="end-btns">
+      <button class="btn btn-gold" onclick="restartGame()">🔄 REJOUER</button>
+      <button class="btn btn-red" onclick="goHome()">🏠 ACCUEIL</button>
+    </div>
+  </div>
+</div>
+
+<footer>Les 12 Coups de Midi — Site créé avec ❤️ pour Théo · Inspiré du jeu TF1 animé par Jean-Luc Reichmann</footer>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  BASE DE QUESTIONS — Culture Générale niveau intermédiaire
+// ══════════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+  // GÉOGRAPHIE
+  { cat:"🌍 Géographie", q:"Quelle est la capitale de l'Australie ?", a:["Canberra","Sydney","Melbourne","Brisbane"], correct:0, tip:"Émilien le sait bien : beaucoup croient que c'est Sydney, mais c'est Canberra !" },
+  { cat:"🌍 Géographie", q:"Quel est le plus long fleuve du monde ?", a:["Le Nil","L'Amazone","Le Yangtsé","Le Mississippi"], correct:0, tip:"Émilien : Le Nil dépasse 6 600 km — et sa source exacte a longtemps été un mystère !" },
+  { cat:"🌍 Géographie", q:"Dans quel pays se trouve le mont Kilimandjaro ?", a:["Tanzanie","Kenya","Éthiopie","Afrique du Sud"], correct:0, tip:"Émilien : Le Kilimandjaro culmine à 5 895 m, c'est le plus haut sommet d'Afrique !" },
+  { cat:"🌍 Géographie", q:"Combien de départements compte la France métropolitaine ?", a:["96","95","101","89"], correct:0, tip:"Émilien : 96 en métropole, 101 en comptant les DOM-TOM !" },
+  { cat:"🌍 Géographie", q:"Quel pays possède le plus grand nombre d'îles au monde ?", a:["Suède","Indonésie","Canada","Philippines"], correct:0, tip:"Émilien : La Suède compte plus de 220 000 îles répertoriées, surprenant !" },
+  { cat:"🌍 Géographie", q:"Quelle mer sépare l'Europe du continent africain à l'ouest ?", a:["Mer Méditerranée","Mer Noire","Océan Atlantique","Mer Rouge"], correct:0, tip:"Émilien : Le détroit de Gibraltar mesure seulement 14 km à son point le plus étroit !" },
+
+  // HISTOIRE
+  { cat:"🏛️ Histoire", q:"En quelle année a eu lieu la Révolution française ?", a:["1789","1792","1776","1804"], correct:0, tip:"Émilien : 1789, avec la prise de la Bastille le 14 juillet — désormais fête nationale !" },
+  { cat:"🏛️ Histoire", q:"Qui a peint la Joconde ?", a:["Léonard de Vinci","Michel-Ange","Raphaël","Botticelli"], correct:0, tip:"Émilien : De Vinci a commencé ce tableau vers 1503 — et il ne l'a jamais livré à son commanditaire !" },
+  { cat:"🏛️ Histoire", q:"Quel roi de France était surnommé 'le Roi-Soleil' ?", a:["Louis XIV","Louis XIII","Louis XVI","Henri IV"], correct:0, tip:"Émilien : Louis XIV a régné 72 ans — le plus long règne de l'histoire de France !" },
+  { cat:"🏛️ Histoire", q:"Qui était le premier président de la Ve République française ?", a:["Charles de Gaulle","Georges Pompidou","François Mitterrand","Valéry Giscard d'Estaing"], correct:0, tip:"Émilien : De Gaulle est élu en 1958 et reste président jusqu'en 1969 !" },
+  { cat:"🏛️ Histoire", q:"En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?", a:["1969","1972","1965","1967"], correct:0, tip:"Émilien : Apollo 11, le 21 juillet 1969 — Neil Armstrong et Buzz Aldrin !" },
+  { cat:"🏛️ Histoire", q:"Quelle ville antique a été détruite par l'éruption du Vésuve en 79 apr. J.-C. ?", a:["Pompéi","Herculanum","Naples","Paestum"], correct:0, tip:"Émilien : Pompéi ET Herculanum ont été englouties, mais Pompéi est la plus célèbre !" },
+
+  // SCIENCES
+  { cat:"🔬 Sciences", q:"Quel est le symbole chimique de l'or ?", a:["Au","Or","Go","Ag"], correct:0, tip:"Émilien : Au vient du latin 'Aurum' — d'où le mot 'aurore' qui signifie 'dorée' !" },
+  { cat:"🔬 Sciences", q:"Combien de planètes compte notre système solaire ?", a:["8","9","7","10"], correct:0, tip:"Émilien : Depuis 2006, Pluton est classée 'planète naine' — donc 8 planètes officielles !" },
+  { cat:"🔬 Sciences", q:"Quelle est la vitesse de la lumière (environ) ?", a:["300 000 km/s","150 000 km/s","1 000 000 km/s","30 000 km/s"], correct:0, tip:"Émilien : 299 792 km/s exactement — la lumière met 8 minutes pour aller du Soleil à la Terre !" },
+  { cat:"🔬 Sciences", q:"Quel organe du corps humain produit l'insuline ?", a:["Le pancréas","Le foie","L'estomac","Les reins"], correct:0, tip:"Émilien : Le pancréas est à la fois une glande exocrine (enzymes) et endocrine (insuline) !" },
+  { cat:"🔬 Sciences", q:"Quel est l'élément le plus abondant dans l'univers ?", a:["Hydrogène","Hélium","Oxygène","Carbone"], correct:0, tip:"Émilien : L'hydrogène représente environ 75% de la masse de l'univers observable !" },
+  { cat:"🔬 Sciences", q:"Combien de chromosomes possède l'être humain ?", a:["46","48","44","23"], correct:0, tip:"Émilien : 46 chromosomes, soit 23 paires — dont une paire sexuelle XX ou XY !" },
+
+  // LITTÉRATURE
+  { cat:"📚 Littérature", q:"Qui a écrit 'Les Misérables' ?", a:["Victor Hugo","Gustave Flaubert","Émile Zola","Alexandre Dumas"], correct:0, tip:"Émilien : Victor Hugo a publié ce chef-d'œuvre en 1862 — après 17 ans de travail !" },
+  { cat:"📚 Littérature", q:"Dans quel roman retrouve-t-on le personnage d'Edmond Dantès ?", a:["Le Comte de Monte-Cristo","Les Trois Mousquetaires","Vingt Mille Lieues sous les mers","Germinal"], correct:0, tip:"Émilien : Alexandre Dumas a écrit ce roman feuilleton en 1844 — un record de rebondissements !" },
+  { cat:"📚 Littérature", q:"Qui a écrit 'À la recherche du temps perdu' ?", a:["Marcel Proust","André Gide","Paul Valéry","Stendhal"], correct:0, tip:"Émilien : Cette œuvre en 7 volumes est l'une des plus longues de la littérature française !" },
+  { cat:"📚 Littérature", q:"Comment s'appelle le robot dans 'Le Petit Prince' de Saint-Exupéry ?", a:["Il n'y a pas de robot","R2D2","Astérix","Tintin"], correct:0, tip:"Émilien : Il y a un serpent, un renard, une rose — mais pas de robot ! Le Petit Prince reste poétique !" },
+
+  // MUSIQUE
+  { cat:"🎵 Musique", q:"Qui a composé la 9e Symphonie avec l'Ode à la joie ?", a:["Beethoven","Mozart","Bach","Schubert"], correct:0, tip:"Émilien : Beethoven était sourd quand il l'a composée — il ne l'a jamais entendue jouer !" },
+  { cat:"🎵 Musique", q:"Dans quel pays est né le jazz ?", a:["États-Unis","Cuba","Brésil","France"], correct:0, tip:"Émilien : Le jazz est né à la Nouvelle-Orléans à la fin du XIXe siècle — mélange de blues et ragtime !" },
+  { cat:"🎵 Musique", q:"Quel est l'instrument traditionnel de l'Écosse ?", a:["La cornemuse","La harpe","Le violon","La flûte"], correct:0, tip:"Émilien : La cornemuse (bagpipe) est devenue le symbole musical de l'Écosse !" },
+  { cat:"🎵 Musique", q:"Comment s'appelait le groupe des Beatles avant de devenir les Beatles ?", a:["The Quarrymen","The Silver Beetles","The Fab Four","The Cavern Boys"], correct:0, tip:"Émilien : Formé par John Lennon en 1956, le groupe s'appelait The Quarrymen !" },
+
+  // SPORT
+  { cat:"⚽ Sport", q:"Combien de temps dure un match de football (temps réglementaire) ?", a:["90 minutes","80 minutes","100 minutes","120 minutes"], correct:0, tip:"Émilien : 90 minutes, soit deux mi-temps de 45 minutes — sans les prolongations !" },
+  { cat:"⚽ Sport", q:"Quel pays a remporté la Coupe du Monde de football en 1998 ?", a:["France","Brésil","Italie","Allemagne"], correct:0, tip:"Émilien : La France de Zidane a battu le Brésil 3-0 en finale — Zinedine Zidane a marqué 2 buts de la tête !" },
+  { cat:"⚽ Sport", q:"Combien de joueurs compte une équipe de basket-ball sur le terrain ?", a:["5","6","4","7"], correct:0, tip:"Émilien : 5 joueurs par équipe, soit 10 au total sur le terrain — c'est aussi le cas au hockey sur glace !" },
+  { cat:"⚽ Sport", q:"Quel sportif a remporté le plus de titres du Grand Chelem en tennis (hommes) ?", a:["Novak Djokovic","Rafael Nadal","Roger Federer","Pete Sampras"], correct:0, tip:"Émilien : En 2024, Djokovic détient le record avec 24 titres du Grand Chelem !" },
+
+  // CINÉMA
+  { cat:"🎬 Cinéma", q:"Qui a réalisé le film 'Titanic' (1997) ?", a:["James Cameron","Steven Spielberg","Peter Jackson","Ridley Scott"], correct:0, tip:"Émilien : James Cameron a aussi réalisé Avatar — deux des films les plus rentables de l'histoire !" },
+  { cat:"🎬 Cinéma", q:"Dans quelle saga apparaît le personnage de 'Frodon Sacquet' ?", a:["Le Seigneur des Anneaux","Harry Potter","Narnia","Eragon"], correct:0, tip:"Émilien : Frodon est le porteur de l'Anneau Unique dans l'œuvre de Tolkien !" },
+  { cat:"🎬 Cinéma", q:"Quel acteur joue Iron Man dans les films Marvel ?", a:["Robert Downey Jr.","Chris Evans","Mark Ruffalo","Chris Hemsworth"], correct:0, tip:"Émilien : Robert Downey Jr. a joué Iron Man de 2008 à 2019 — un rôle qui a relancé sa carrière !" },
+
+  // GASTRONOMIE
+  { cat:"🍽️ Gastronomie", q:"De quel pays est originaire la pizza ?", a:["Italie","Grèce","France","Espagne"], correct:0, tip:"Émilien : La pizza Margherita est née à Naples au XIXe siècle — ses couleurs représentent le drapeau italien !" },
+  { cat:"🍽️ Gastronomie", q:"Qu'est-ce que la 'baguette' en France ?", a:["Un pain long et croustillant","Une pâtisserie sucrée","Un gâteau au chocolat","Un fromage"], correct:0, tip:"Émilien : La baguette française est inscrite au patrimoine immatériel de l'UNESCO depuis 2022 !" },
+
+  // ANIMAUX
+  { cat:"🦁 Animaux", q:"Quel est l'animal le plus rapide du monde ?", a:["Le guépard","Le faucon pèlerin","Le lion","Le lièvre"], correct:0, tip:"Émilien : Le guépard atteint 110 km/h, mais le faucon pèlerin dépasse 390 km/h en piqué — tout dépend si on compte l'air !" },
+  { cat:"🦁 Animaux", q:"Combien de cœurs possède un poulpe ?", a:["3","1","2","4"], correct:0, tip:"Émilien : 3 cœurs — un principal et deux branchiaux pour pomper le sang vers les branchies !" },
+  { cat:"🦁 Animaux", q:"Quel est le plus grand mammifère terrestre ?", a:["L'éléphant d'Afrique","La girafe","Le rhinocéros","L'hippopotame"], correct:0, tip:"Émilien : L'éléphant d'Afrique peut peser jusqu'à 7 tonnes — 3x plus qu'une voiture !" },
+];
+
+// ══════════════════════════════════════════════════════
+//  ÉTAT DU JEU
+// ══════════════════════════════════════════════════════
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let lives = 3;
+let correctCount = 0;
+let wrongCount = 0;
+let totalRounds = 12;
+let timer = null;
+let timeLeft = 0;
+let answered = false;
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function confetti() {
+  const emojis = ['⭐','🌟','✨','🎉','🏆','💛'];
+  for (let i=0; i<14; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-star';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100+'vw';
+    el.style.top = '-30px';
+    el.style.animationDelay = Math.random()*0.8+'s';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  DÉMARRAGE
+// ══════════════════════════════════════════════════════
+function startGame() {
+  totalRounds = parseInt(document.getElementById('select-rounds').value);
+  questions = shuffle(ALL_QUESTIONS).slice(0, totalRounds);
+  // Pour chaque question, on mélange les réponses mais on track le bon index
+  questions = questions.map(q => {
+    const opts = q.a.map((text,i) => ({text, isCorrect: i === q.correct}));
+    const shuffled = shuffle(opts);
+    return { ...q, opts: shuffled, tip: q.tip };
+  });
+  currentQ = 0; score = 0; lives = 3; correctCount = 0; wrongCount = 0;
+  buildStrikes();
+  showScreen('screen-game');
+  showQuestion();
+}
+
+// ══════════════════════════════════════════════════════
+//  STRIKES
+// ══════════════════════════════════════════════════════
+function buildStrikes() {
+  const row = document.getElementById('strikes-row');
+  row.innerHTML = '';
+  for (let i=0; i<totalRounds; i++) {
+    const div = document.createElement('div');
+    div.className = 'strike-icon' + (i===0?' current':'');
+    div.id = 'strike-'+i;
+    div.textContent = '⭐';
+    row.appendChild(div);
+  }
+}
+function updateStrikes() {
+  for (let i=0; i<totalRounds; i++) {
+    const el = document.getElementById('strike-'+i);
+    if (!el) continue;
+    el.classList.remove('done','current');
+    if (i < currentQ) el.classList.add('done');
+    else if (i === currentQ) el.classList.add('current');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  AFFICHAGE QUESTION
+// ══════════════════════════════════════════════════════
+function showQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  updateStrikes();
+
+  document.getElementById('hud-round').textContent  = `${currentQ+1} / ${totalRounds}`;
+  document.getElementById('hud-score').textContent  = score;
+  document.getElementById('hud-lives').textContent  = '❤️'.repeat(lives) + '🖤'.repeat(Math.max(0,3-lives));
+  document.getElementById('category-badge').textContent = q.cat;
+  document.getElementById('question-num').textContent = `Question ${currentQ+1} sur ${totalRounds}`;
+  document.getElementById('question-text').textContent = q.q;
+
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span>${opt.text}`;
+    btn.onclick = () => handleAnswer(btn, opt.isCorrect, q.tip);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback-banner';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('emilien-tip').className = 'emilien-tip';
+  document.getElementById('emilien-tip').textContent = '';
+
+  startTimer();
+}
+
+// ══════════════════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════════════════
+function startTimer() {
+  timeLeft = 20;
+  clearInterval(timer);
+  updateTimerBar();
+  timer = setInterval(() => {
+    timeLeft--;
+    updateTimerBar();
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (!answered) timeOut();
+    }
+  }, 1000);
+}
+function updateTimerBar() {
+  const bar = document.getElementById('timer-bar');
+  const pct = (timeLeft / 20) * 100;
+  bar.style.width = pct + '%';
+  bar.className = 'timer-bar' + (timeLeft <= 6 ? ' danger' : '');
+}
+function timeOut() {
+  answered = true;
+  lives--;
+  wrongCount++;
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-banner show ko';
+  // Find correct answer
+  const q = questions[currentQ];
+  const correctText = q.opts.find(o=>o.isCorrect).text;
+  fb.innerHTML = `⏰ Temps écoulé ! La bonne réponse était : <strong>${correctText}</strong>`;
+  highlightCorrect();
+  showTip(q.tip);
+  updateHud();
+  setTimeout(nextOrEnd, 2800);
+}
+
+// ══════════════════════════════════════════════════════
+//  RÉPONSE
+// ══════════════════════════════════════════════════════
+function handleAnswer(btn, isCorrect, tip) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timer);
+
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  if (isCorrect) {
+    btn.classList.add('correct');
+    correctCount++;
+    const points = Math.max(100, Math.floor((timeLeft/20)*300));
+    score += points;
+    fb.className = 'feedback-banner show ok';
+    fb.innerHTML = `✅ Excellent, Théo ! <strong>+${points} points</strong> 🌟`;
+    if (timeLeft >= 15) confetti();
+  } else {
+    btn.classList.add('wrong');
+    lives--;
+    wrongCount++;
+    fb.className = 'feedback-banner show ko';
+    const correctText = questions[currentQ].opts.find(o=>o.isCorrect).text;
+    fb.innerHTML = `❌ Raté ! La bonne réponse était : <strong>${correctText}</strong>`;
+    highlightCorrect();
+  }
+
+  showTip(tip);
+  document.getElementById('hud-score').textContent = score;
+  document.getElementById('hud-lives').textContent = '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(Math.max(0,3-lives));
+
+  setTimeout(nextOrEnd, 2500);
+}
+function highlightCorrect() {
+  document.querySelectorAll('.answer-btn').forEach(b => {
+    if (b.querySelector('.letter') && !b.classList.contains('wrong')) {
+      // find the correct one
+    }
+  });
+  // find & highlight correct btn
+  const q = questions[currentQ];
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((b,i) => {
+    if (q.opts[i].isCorrect) b.classList.add('correct');
+  });
+}
+function showTip(tip) {
+  const el = document.getElementById('emilien-tip');
+  el.className = 'emilien-tip show';
+  el.innerHTML = `💡 <strong>Émilien sait que :</strong> ${tip}`;
+}
+function updateHud() {
+  document.getElementById('hud-lives').textContent = '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(Math.max(0,3-lives));
+}
+function nextOrEnd() {
+  currentQ++;
+  if (lives <= 0 || currentQ >= totalRounds) {
+    endGame();
+  } else {
+    showQuestion();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  FIN DE PARTIE
+// ══════════════════════════════════════════════════════
+function endGame() {
+  clearInterval(timer);
+  const pct = Math.round((correctCount / totalRounds) * 100);
+
+  let emoji, title, msg;
+  if (pct >= 90) {
+    emoji = '🏆'; title = 'NIVEAU ÉMILIEN !';
+    msg = `Incroyable Théo ! Tu as atteint le niveau du grand <strong>Émilien</strong> ! Tu domines la culture générale avec brio. Jean-Luc Reichmann serait fier de toi ! 🌟`;
+    confetti(); confetti();
+  } else if (pct >= 70) {
+    emoji = '⭐'; title = 'Très bien joué !';
+    msg = `Bravo Théo ! Tu as un excellent niveau de culture générale. Continue à apprendre comme Émilien et tu seras inarrêtable ! 💪`;
+    confetti();
+  } else if (pct >= 50) {
+    emoji = '📚'; title = 'Bon début !';
+    msg = `Pas mal Théo ! Tu as de bonnes bases. Émilien conseille : <strong>lis des encyclopédies, regarde des documentaires</strong> et reviens défier ce quiz ! 🎯`;
+  } else {
+    emoji = '🎓'; title = 'Continue d\'apprendre !';
+    msg = `Ne te décourage pas Théo ! Même Émilien a commencé quelque part. Relis les anecdotes de chaque question et refais le quiz — tu progresseras vite ! 💡`;
+  }
+
+  document.getElementById('end-emoji').textContent = emoji;
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('end-score').innerHTML = `${score} <span>pts</span>`;
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrongCount;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('end-msg').innerHTML = msg;
+
+  showScreen('screen-end');
+}
+
+function restartGame() { startGame(); }
+function goHome() { showScreen('screen-welcome'); }
+</script>
+</body>
+</html>
