@@ -1,912 +1,618 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Les 12 Coups de Midi – L'Épreuve de Théo</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;600;700&display=swap');
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>12 Coups de Midi – Théo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0e1a;--surface:#13162b;--surface2:#1a1e38;--border:rgba(255,255,255,0.07);
+  --gold:#f0b429;--gold2:#ffd166;--text:#eef0ff;--muted:#7c82a8;
+  --ok:#2ecc8a;--ko:#e5534b;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(240,180,41,0.12),transparent),radial-gradient(ellipse 60% 40% at 80% 90%,rgba(76,110,245,0.08),transparent);pointer-events:none;z-index:0}
+header{position:relative;z-index:2;padding:18px 24px 15px;border-bottom:1px solid var(--border);backdrop-filter:blur(10px);background:rgba(12,14,26,0.9)}
+.header-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-badge{background:var(--gold);color:#0c0e1a;font-weight:700;font-size:0.68rem;padding:3px 10px;border-radius:20px;letter-spacing:1.5px;text-transform:uppercase}
+.logo-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text)}
+.emilien-pill{display:flex;align-items:center;gap:6px;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.3);border-radius:30px;padding:5px 14px;font-size:0.76rem;color:var(--gold);font-weight:500}
+.screen{display:none;position:relative;z-index:1}
+.screen.active{display:block}
 
-    :root {
-      --gold: #F5C518;
-      --gold-dark: #d4a800;
-      --red: #D40000;
-      --blue-dark: #0a0a2a;
-      --blue-mid: #12124a;
-      --white: #ffffff;
-      --gray: #ccc;
-    }
+/* WELCOME */
+#welcome{max-width:560px;margin:0 auto;padding:44px 20px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.22);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:var(--gold);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:18px}
+.w-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,6vw,2.7rem);line-height:1.15;margin-bottom:10px}
+.w-title span{color:var(--gold)}
+.w-sub{color:var(--muted);font-size:0.97rem;line-height:1.7;margin-bottom:26px}
+.quote{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:15px 20px;margin-bottom:30px;font-size:0.88rem;color:var(--muted);font-style:italic;line-height:1.65}
+.quote strong{color:var(--gold);font-style:normal}
+.cfg-lbl{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;font-weight:600}
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:26px}
+.cfg-opt{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.cfg-opt:hover{border-color:rgba(240,180,41,0.35);background:var(--surface2)}
+.cfg-opt.sel{border-color:var(--gold);background:rgba(240,180,41,0.07)}
+.cfg-opt .num{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--gold);display:block}
+.cfg-opt .lbl{font-size:0.7rem;color:var(--muted);margin-top:2px}
+.btn-start{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;background:var(--gold);color:#0c0e1a;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:0.3px}
+.btn-start:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.28)}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+/* GAME */
+#game{max-width:680px;margin:0 auto;padding:22px 16px 48px}
+.hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.hud-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px}
+.hud-lbl{font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.hud-val{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--text)}
+.hud-val.gold{color:var(--gold)}
+.prog-wrap{background:var(--surface);border-radius:100px;height:5px;margin-bottom:10px;overflow:hidden}
+.prog-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s ease}
+.timer-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.timer-track{flex:1;background:var(--surface);border-radius:100px;height:7px;overflow:hidden}
+.timer-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#4c6ef5,var(--gold));transition:width 1s linear,background .5s}
+.timer-fill.urgent{background:linear-gradient(90deg,var(--ko),#ff9f43)}
+.timer-num{font-family:'DM Serif Display',serif;font-size:1rem;min-width:22px;text-align:right;color:var(--gold)}
+.dots-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
+.dot{width:20px;height:20px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);transition:all .25s}
+.dot.ok{background:rgba(46,204,138,0.2);border-color:var(--ok)}
+.dot.ko{background:rgba(229,83,75,0.2);border-color:var(--ko)}
+.dot.cur{border-color:var(--gold);background:rgba(240,180,41,0.15);box-shadow:0 0 7px rgba(240,180,41,0.3)}
+.cat-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 13px;border-radius:30px;font-size:0.73rem;font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--muted);margin-bottom:12px;letter-spacing:0.3px}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 26px 22px;margin-bottom:14px}
+.q-meta{font-size:0.7rem;color:var(--muted);margin-bottom:9px;font-weight:500}
+.q-text{font-family:'DM Serif Display',serif;font-size:clamp(1.05rem,3vw,1.28rem);line-height:1.52;color:var(--text)}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+@media(max-width:460px){.ans-grid{grid-template-columns:1fr}}
+.ans-btn{display:flex;align-items:center;gap:11px;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:13px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer;text-align:left;transition:all .16s}
+.ans-btn:hover:not(:disabled){border-color:rgba(240,180,41,0.38);background:var(--surface2);transform:translateY(-1px)}
+.ans-btn .bdg{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0}
+.ans-btn:nth-child(1) .bdg{background:rgba(76,110,245,0.2);color:#7b9cf8}
+.ans-btn:nth-child(2) .bdg{background:rgba(139,92,246,0.2);color:#b08eff}
+.ans-btn:nth-child(3) .bdg{background:rgba(245,158,11,0.2);color:#fbbf24}
+.ans-btn:nth-child(4) .bdg{background:rgba(16,185,129,0.2);color:#34d399}
+.ans-btn.correct{background:rgba(46,204,138,0.09);border-color:var(--ok);animation:popIn .28s ease}
+.ans-btn.correct .bdg{background:rgba(46,204,138,0.28);color:var(--ok)}
+.ans-btn.wrong{background:rgba(229,83,75,0.09);border-color:var(--ko);animation:shk .28s ease}
+.ans-btn.wrong .bdg{background:rgba(229,83,75,0.28);color:var(--ko)}
+.ans-btn:disabled{cursor:default}
+@keyframes popIn{0%{transform:scale(.97)}60%{transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes shk{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
+.feedback{border-radius:13px;padding:13px 17px;font-size:0.88rem;line-height:1.55;display:none;border:1px solid transparent;margin-bottom:9px}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(46,204,138,0.08);border-color:rgba(46,204,138,0.28);color:#6ee7b7}
+.feedback.ko{background:rgba(229,83,75,0.08);border-color:rgba(229,83,75,0.28);color:#fca5a5}
+.tip-box{background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.18);border-radius:13px;padding:11px 15px;font-size:0.83rem;color:var(--muted);line-height:1.6;display:none}
+.tip-box.show{display:block}
+.tip-box strong{color:var(--gold)}
+.streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(240,180,41,0.15);border:1px solid rgba(240,180,41,0.3);border-radius:20px;padding:2px 9px;font-size:0.73rem;color:var(--gold);font-weight:600;margin-left:6px}
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--blue-dark);
-      color: var(--white);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, var(--gold-dark), var(--gold), #ffe566, var(--gold));
-      text-align: center;
-      padding: 18px 20px 14px;
-      box-shadow: 0 4px 20px rgba(245,197,24,0.5);
-      position: relative;
-    }
-    header::before, header::after {
-      content: "☀";
-      font-size: 2rem;
-      position: absolute;
-      top: 50%; transform: translateY(-50%);
-      color: var(--gold-dark);
-    }
-    header::before { left: 20px; }
-    header::after  { right: 20px; }
-
-    header h1 {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(1.6rem, 5vw, 3rem);
-      color: var(--blue-dark);
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-      line-height: 1.1;
-    }
-    header p.subtitle {
-      color: var(--blue-dark);
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-top: 4px;
-      opacity: 0.85;
-    }
-
-    /* ── CHAMPION BANNER ── */
-    .champion-banner {
-      background: linear-gradient(90deg, var(--red), #a00000, var(--red));
-      text-align: center;
-      padding: 10px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      border-bottom: 3px solid var(--gold);
-    }
-    .champion-banner span { color: var(--gold); }
-
-    /* ── SCREENS ── */
-    .screen { display: none; }
-    .screen.active { display: flex; flex-direction: column; align-items: center; }
-
-    /* ── WELCOME ── */
-    #screen-welcome {
-      padding: 40px 20px;
-      text-align: center;
-      gap: 24px;
-    }
-    .welcome-card {
-      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
-      border: 3px solid var(--gold);
-      border-radius: 20px;
-      padding: 36px 40px;
-      max-width: 560px;
-      width: 100%;
-      box-shadow: 0 0 40px rgba(245,197,24,0.3);
-    }
-    .emoji-big { font-size: 4rem; margin-bottom: 12px; }
-    .welcome-card h2 {
-      font-family: 'Anton', sans-serif;
-      font-size: 2rem;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-    .welcome-card p {
-      color: var(--gray);
-      line-height: 1.7;
-      margin-bottom: 20px;
-      font-size: 0.97rem;
-    }
-    .welcome-card p strong { color: var(--white); }
-
-    .emilien-box {
-      background: rgba(245,197,24,0.1);
-      border: 2px dashed var(--gold);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 24px;
-      font-size: 0.9rem;
-      color: var(--gold);
-      font-style: italic;
-    }
-    .emilien-box strong { color: var(--white); font-style: normal; }
-
-    .strike-select-label {
-      font-size: 0.95rem;
-      color: var(--gray);
-      margin-bottom: 8px;
-    }
-    .strike-select {
-      background: var(--blue-dark);
-      border: 2px solid var(--gold);
-      color: var(--white);
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-family: 'Poppins', sans-serif;
-      margin-bottom: 24px;
-      cursor: pointer;
-    }
-
-    /* ── BUTTONS ── */
-    .btn {
-      font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: 1.5px;
-      padding: 14px 36px;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-gold {
-      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
-      color: var(--blue-dark);
-      box-shadow: 0 4px 18px rgba(245,197,24,0.45);
-    }
-    .btn-gold:hover { transform: scale(1.05); box-shadow: 0 6px 26px rgba(245,197,24,0.6); }
-    .btn-red  {
-      background: linear-gradient(135deg, #a00000, var(--red));
-      color: var(--white);
-      box-shadow: 0 4px 18px rgba(212,0,0,0.4);
-    }
-    .btn-red:hover { transform: scale(1.05); }
-
-    /* ── GAME SCREEN ── */
-    #screen-game {
-      padding: 20px 16px 40px;
-      gap: 18px;
-      max-width: 700px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .hud {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .hud-score, .hud-lives, .hud-round {
-      background: var(--blue-mid);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 8px 18px;
-      text-align: center;
-      flex: 1;
-      min-width: 90px;
-    }
-    .hud-label { font-size: 0.65rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-    .hud-value { font-family: 'Anton', sans-serif; font-size: 1.5rem; color: var(--white); }
-
-    /* TIMER */
-    .timer-wrap {
-      width: 100%;
-      background: #0a0a2a;
-      border-radius: 12px;
-      border: 2px solid var(--gold);
-      overflow: hidden;
-      height: 14px;
-      position: relative;
-    }
-    .timer-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold), #ffe566);
-      transition: width 1s linear, background 0.5s;
-      width: 100%;
-    }
-    .timer-bar.danger { background: linear-gradient(90deg, #a00000, var(--red)); }
-
-    /* CATEGORY BADGE */
-    .category-badge {
-      background: rgba(245,197,24,0.12);
-      border: 1px solid var(--gold);
-      border-radius: 20px;
-      padding: 4px 16px;
-      font-size: 0.78rem;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* QUESTION CARD */
-    .question-card {
-      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
-      border: 3px solid var(--gold);
-      border-radius: 18px;
-      padding: 28px 32px;
-      width: 100%;
-      box-shadow: 0 0 30px rgba(245,197,24,0.2);
-    }
-    .question-text {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      font-weight: 600;
-      line-height: 1.55;
-      margin-bottom: 6px;
-      color: var(--white);
-      text-align: center;
-    }
-    .question-num {
-      font-size: 0.78rem;
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 4px;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    /* ANSWERS */
-    .answers-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: 100%;
-    }
-    @media (max-width: 480px) { .answers-grid { grid-template-columns: 1fr; } }
-
-    .answer-btn {
-      background: var(--blue-mid);
-      border: 2px solid rgba(245,197,24,0.35);
-      border-radius: 14px;
-      color: var(--white);
-      padding: 16px 14px;
-      font-size: 0.95rem;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s;
-      text-align: center;
-      position: relative;
-    }
-    .answer-btn:hover:not(:disabled) {
-      border-color: var(--gold);
-      background: rgba(245,197,24,0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(245,197,24,0.25);
-    }
-    .answer-btn .letter {
-      display: inline-block;
-      width: 26px; height: 26px;
-      background: var(--gold);
-      color: var(--blue-dark);
-      border-radius: 50%;
-      font-family: 'Anton', sans-serif;
-      font-size: 0.85rem;
-      line-height: 26px;
-      margin-right: 8px;
-      flex-shrink: 0;
-    }
-    .answer-btn.correct {
-      background: rgba(0,200,80,0.25);
-      border-color: #00c850;
-      color: #7fffb5;
-      animation: pulse-correct 0.4s;
-    }
-    .answer-btn.wrong {
-      background: rgba(200,0,0,0.25);
-      border-color: var(--red);
-      color: #ff8080;
-      animation: shake 0.3s;
-    }
-    .answer-btn:disabled { cursor: default; }
-
-    @keyframes pulse-correct {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.04); }
-      100% { transform: scale(1); }
-    }
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      60% { transform: translateX(6px); }
-    }
-
-    /* FEEDBACK */
-    .feedback-banner {
-      background: var(--blue-mid);
-      border-radius: 14px;
-      padding: 14px 22px;
-      text-align: center;
-      width: 100%;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
-      border: 2px solid transparent;
-      line-height: 1.5;
-    }
-    .feedback-banner.show { display: block; }
-    .feedback-banner.ok  { border-color: #00c850; color: #7fffb5; }
-    .feedback-banner.ko  { border-color: var(--red); color: #ff8080; }
-
-    /* ANECDOTE EMILIEN */
-    .emilien-tip {
-      background: rgba(245,197,24,0.08);
-      border-left: 4px solid var(--gold);
-      border-radius: 0 12px 12px 0;
-      padding: 12px 18px;
-      font-size: 0.88rem;
-      color: var(--gold);
-      font-style: italic;
-      width: 100%;
-      display: none;
-    }
-    .emilien-tip.show { display: block; }
-
-    /* STRIKES */
-    .strikes-row {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    .strike-icon {
-      width: 38px; height: 38px;
-      background: var(--blue-mid);
-      border: 2px solid var(--gold);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .strike-icon.done {
-      background: var(--gold);
-      border-color: var(--gold-dark);
-      animation: pop 0.3s;
-    }
-    .strike-icon.current {
-      box-shadow: 0 0 12px var(--gold);
-      border-color: #ffe566;
-    }
-    @keyframes pop {
-      0% { transform: scale(0.7); }
-      60% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-
-    /* ── END SCREEN ── */
-    #screen-end {
-      padding: 40px 20px;
-      text-align: center;
-      gap: 22px;
-    }
-    .end-card {
-      background: linear-gradient(145deg, var(--blue-mid), #1a1a6a);
-      border: 3px solid var(--gold);
-      border-radius: 20px;
-      padding: 36px 40px;
-      max-width: 560px;
-      width: 100%;
-      box-shadow: 0 0 50px rgba(245,197,24,0.3);
-    }
-    .end-card h2 {
-      font-family: 'Anton', sans-serif;
-      font-size: 2.2rem;
-      color: var(--gold);
-      margin: 12px 0 8px;
-    }
-    .end-score {
-      font-family: 'Anton', sans-serif;
-      font-size: 4rem;
-      color: var(--white);
-      line-height: 1;
-    }
-    .end-score span { font-size: 1.5rem; color: var(--gold); }
-    .end-msg { color: var(--gray); font-size: 0.95rem; line-height: 1.6; margin: 14px 0 22px; }
-    .end-msg strong { color: var(--white); }
-
-    .stats-row {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    .stat-box {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(245,197,24,0.3);
-      border-radius: 12px;
-      padding: 12px 20px;
-      text-align: center;
-    }
-    .stat-val { font-family: 'Anton', sans-serif; font-size: 1.8rem; color: var(--gold); }
-    .stat-lbl { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
-
-    .end-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      top: 20px; left: 50%; transform: translateX(-50%);
-      background: var(--gold);
-      color: var(--blue-dark);
-      font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
-      padding: 12px 30px;
-      border-radius: 50px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
-      z-index: 999;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .toast.show { opacity: 1; }
-
-    /* STARS ANIMATION */
-    .confetti-star {
-      position: fixed;
-      pointer-events: none;
-      font-size: 1.5rem;
-      animation: fall 2s ease-in forwards;
-      z-index: 998;
-    }
-    @keyframes fall {
-      0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
-      100% { opacity: 0; transform: translateY(80vh) rotate(720deg); }
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 14px;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.3);
-      border-top: 1px solid rgba(245,197,24,0.1);
-    }
-  </style>
+/* END */
+#endscreen{max-width:500px;margin:0 auto;padding:48px 20px;text-align:center}
+.end-emoji{font-size:3.2rem;margin-bottom:14px}
+.end-h{font-family:'DM Serif Display',serif;font-size:1.9rem;margin-bottom:5px}
+.end-big{font-family:'DM Serif Display',serif;font-size:3.8rem;color:var(--gold);line-height:1;margin-bottom:3px}
+.end-big span{font-size:1.1rem;color:var(--muted)}
+.end-sub2{color:var(--muted);font-size:0.87rem;margin-bottom:22px}
+.stats{display:flex;justify-content:center;gap:11px;flex-wrap:wrap;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 20px;min-width:85px}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.7rem;color:var(--gold)}
+.stat-l{font-size:0.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.end-msg2{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:17px 20px;color:var(--muted);font-size:0.88rem;line-height:1.65;text-align:left;margin-bottom:22px}
+.end-msg2 strong{color:var(--text)}
+.end-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.btn-p{padding:12px 26px;border-radius:12px;background:var(--gold);border:none;color:#0c0e1a;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-p:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-o{padding:12px 22px;border-radius:12px;background:var(--surface);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-o:hover{border-color:var(--gold);color:var(--gold)}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);backdrop-filter:blur(12px);color:var(--text);font-size:0.88rem;font-weight:600;padding:9px 22px;border-radius:30px;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.star-b{position:fixed;pointer-events:none;z-index:998;animation:bst 1.8s forwards;font-size:1.3rem}
+@keyframes bst{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(-110px) rotate(540deg)}}
+</style>
 </head>
 <body>
-
 <header>
-  <h1>⚡ LES 12 COUPS DE MIDI ⚡</h1>
-  <p class="subtitle">L'Épreuve de Théo — Inspirée d'Émilien</p>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-badge">⚡ Quiz</span>
+      <span class="logo-title">Les 12 Coups de Midi</span>
+    </div>
+    <div class="emilien-pill">🏆 Inspiré d'<strong>Émilien</strong></div>
+  </div>
 </header>
-<div class="champion-banner">
-  🏆 En hommage au grand champion <span>Émilien</span> — Le maître de la culture générale 🏆
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════ WELCOME ═══════════════ -->
-<div class="screen active" id="screen-welcome">
-  <div class="welcome-card">
-    <div class="emoji-big">🌟</div>
-    <h2>Bonjour Théo !</h2>
-    <p>
-      Bienvenue dans <strong>ta version des 12 Coups de Midi</strong> !
-      Réponds aux questions de culture générale, comme ton idole
-      <strong>Émilien</strong>, et accumule un maximum de points !
-    </p>
-    <div class="emilien-box">
-      💬 <strong>Le conseil d'Émilien :</strong> « Lis beaucoup, écoute tout,
-      observe partout — la culture générale se nourrit de curiosité ! »
-    </div>
-    <p class="strike-select-label">Combien de questions veux-tu jouer ?</p>
-    <select class="strike-select" id="select-rounds">
-      <option value="6">6 questions – Entraînement</option>
-      <option value="12" selected>12 questions – Le Grand Jeu</option>
-      <option value="20">20 questions – Mode Champion</option>
-    </select>
-    <br>
-    <button class="btn btn-gold" onclick="startGame()">🎬 COMMENCER LE JEU</button>
+<!-- WELCOME -->
+<div class="screen active" id="welcome">
+<div style="max-width:560px;margin:0 auto;padding:44px 20px">
+  <div class="eyebrow">🌟 Édition spéciale Théo</div>
+  <h1 class="w-title">Bonjour <span>Théo</span> !<br>À toi de jouer.</h1>
+  <p class="w-sub">300 questions de culture générale, tous thèmes — comme les grands champions à la télé.</p>
+  <div class="quote">💬 <strong>Émilien :</strong> « La culture générale ne se mémorise pas — elle se construit avec la curiosité. Lis, écoute, questionne tout. C'est comme ça que j'ai appris. »</div>
+  <div class="cfg-lbl">Nombre de questions</div>
+  <div class="cfg-grid">
+    <div class="cfg-opt" onclick="selR(this,6)"><span class="num">6</span><div class="lbl">Entraînement</div></div>
+    <div class="cfg-opt sel" onclick="selR(this,12)"><span class="num">12</span><div class="lbl">Le Grand Jeu</div></div>
+    <div class="cfg-opt" onclick="selR(this,20)"><span class="num">20</span><div class="lbl">Mode Champion</div></div>
   </div>
+  <button class="btn-start" onclick="startGame()">Commencer le jeu →</button>
+</div>
 </div>
 
-<!-- ═══════════════ GAME ═══════════════ -->
-<div class="screen" id="screen-game">
-
-  <!-- HUD -->
+<!-- GAME -->
+<div class="screen" id="game">
+<div style="max-width:680px;margin:0 auto;padding:22px 16px 48px">
   <div class="hud">
-    <div class="hud-round">
-      <div class="hud-label">Question</div>
-      <div class="hud-value" id="hud-round">1 / 12</div>
-    </div>
-    <div class="hud-score">
-      <div class="hud-label">Score</div>
-      <div class="hud-value" id="hud-score">0</div>
-    </div>
-    <div class="hud-lives">
-      <div class="hud-label">Vies</div>
-      <div class="hud-value" id="hud-lives">❤️❤️❤️</div>
-    </div>
+    <div class="hud-card"><div class="hud-lbl">Question</div><div class="hud-val" id="hq">1/12</div></div>
+    <div class="hud-card"><div class="hud-lbl">Score</div><div class="hud-val gold" id="hs">0</div></div>
+    <div class="hud-card"><div class="hud-lbl">Vies</div><div class="hud-val" id="hv">❤️❤️❤️</div></div>
   </div>
-
-  <!-- TIMER -->
-  <div class="timer-wrap"><div class="timer-bar" id="timer-bar"></div></div>
-
-  <!-- STRIKES -->
-  <div class="strikes-row" id="strikes-row"></div>
-
-  <!-- CATEGORY -->
-  <div class="category-badge" id="category-badge">Culture Générale</div>
-
-  <!-- QUESTION -->
-  <div class="question-card">
-    <div class="question-num" id="question-num">Question 1</div>
-    <div class="question-text" id="question-text">Chargement...</div>
+  <div class="prog-wrap"><div class="prog-bar" id="pb" style="width:0%"></div></div>
+  <div class="timer-row">
+    <div class="timer-track"><div class="timer-fill" id="tf"></div></div>
+    <div class="timer-num" id="tn">20</div>
   </div>
-
-  <!-- ANSWERS -->
-  <div class="answers-grid" id="answers-grid"></div>
-
-  <!-- FEEDBACK -->
-  <div class="feedback-banner" id="feedback"></div>
-
-  <!-- EMILIEN TIP -->
-  <div class="emilien-tip" id="emilien-tip"></div>
-
+  <div class="dots-row" id="dots"></div>
+  <div class="cat-badge" id="cat">—</div>
+  <div class="q-card">
+    <div class="q-meta" id="qm">Question 1</div>
+    <div class="q-text" id="qt">Chargement...</div>
+  </div>
+  <div class="ans-grid" id="ag"></div>
+  <div class="feedback" id="fb"></div>
+  <div class="tip-box" id="tb"><strong>💡 Émilien sait que :</strong> <span id="ts"></span></div>
+</div>
 </div>
 
-<!-- ═══════════════ END ═══════════════ -->
-<div class="screen" id="screen-end">
-  <div class="end-card">
-    <div id="end-emoji" style="font-size:4rem"></div>
-    <h2 id="end-title">Bien joué !</h2>
-    <div class="end-score" id="end-score">0 <span>pts</span></div>
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="stat-val" id="stat-correct">0</div>
-        <div class="stat-lbl">Bonnes rép.</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val" id="stat-wrong">0</div>
-        <div class="stat-lbl">Mauvaises</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val" id="stat-pct">0%</div>
-        <div class="stat-lbl">Réussite</div>
-      </div>
-    </div>
-    <p class="end-msg" id="end-msg"></p>
-    <div class="end-btns">
-      <button class="btn btn-gold" onclick="restartGame()">🔄 REJOUER</button>
-      <button class="btn btn-red" onclick="goHome()">🏠 ACCUEIL</button>
-    </div>
+<!-- END -->
+<div class="screen" id="endscreen">
+<div style="max-width:500px;margin:0 auto;padding:48px 20px;text-align:center">
+  <div class="end-emoji" id="ee">🌟</div>
+  <h2 class="end-h" id="et">Bravo !</h2>
+  <div class="end-big" id="escore">0 <span>pts</span></div>
+  <div class="end-sub2" id="esub">—</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="sok">0</div><div class="stat-l">Bonnes</div></div>
+    <div class="stat"><div class="stat-n" id="sko">0</div><div class="stat-l">Ratées</div></div>
+    <div class="stat"><div class="stat-n" id="spct">0%</div><div class="stat-l">Réussite</div></div>
+  </div>
+  <div class="end-msg2" id="emsg"></div>
+  <div class="end-btns">
+    <button class="btn-p" onclick="startGame()">🔄 Rejouer</button>
+    <button class="btn-o" onclick="goHome()">🏠 Accueil</button>
   </div>
 </div>
-
-<footer>Les 12 Coups de Midi — Site créé avec ❤️ pour Théo · Inspiré du jeu TF1 animé par Jean-Luc Reichmann</footer>
+</div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  BASE DE QUESTIONS — Culture Générale niveau intermédiaire
-// ══════════════════════════════════════════════════════
 const ALL_QUESTIONS = [
-  // GÉOGRAPHIE
-  { cat:"🌍 Géographie", q:"Quelle est la capitale de l'Australie ?", a:["Canberra","Sydney","Melbourne","Brisbane"], correct:0, tip:"Émilien le sait bien : beaucoup croient que c'est Sydney, mais c'est Canberra !" },
-  { cat:"🌍 Géographie", q:"Quel est le plus long fleuve du monde ?", a:["Le Nil","L'Amazone","Le Yangtsé","Le Mississippi"], correct:0, tip:"Émilien : Le Nil dépasse 6 600 km — et sa source exacte a longtemps été un mystère !" },
-  { cat:"🌍 Géographie", q:"Dans quel pays se trouve le mont Kilimandjaro ?", a:["Tanzanie","Kenya","Éthiopie","Afrique du Sud"], correct:0, tip:"Émilien : Le Kilimandjaro culmine à 5 895 m, c'est le plus haut sommet d'Afrique !" },
-  { cat:"🌍 Géographie", q:"Combien de départements compte la France métropolitaine ?", a:["96","95","101","89"], correct:0, tip:"Émilien : 96 en métropole, 101 en comptant les DOM-TOM !" },
-  { cat:"🌍 Géographie", q:"Quel pays possède le plus grand nombre d'îles au monde ?", a:["Suède","Indonésie","Canada","Philippines"], correct:0, tip:"Émilien : La Suède compte plus de 220 000 îles répertoriées, surprenant !" },
-  { cat:"🌍 Géographie", q:"Quelle mer sépare l'Europe du continent africain à l'ouest ?", a:["Mer Méditerranée","Mer Noire","Océan Atlantique","Mer Rouge"], correct:0, tip:"Émilien : Le détroit de Gibraltar mesure seulement 14 km à son point le plus étroit !" },
+// ── GÉOGRAPHIE ──
+{cat:"🌍 Géographie",q:"Quelle est la capitale de l'Australie ?",a:["Canberra","Sydney","Melbourne","Brisbane"],tip:"Beaucoup croient que c'est Sydney — Canberra a été construite spécialement pour éviter la rivalité entre Sydney et Melbourne."},
+{cat:"🌍 Géographie",q:"Quel est le plus grand pays du monde par superficie ?",a:["Russie","Canada","États-Unis","Chine"],tip:"La Russie couvre 17 millions de km² — plus grande que la surface de Pluton !"},
+{cat:"🌍 Géographie",q:"Quelle est la capitale du Canada ?",a:["Ottawa","Toronto","Montréal","Vancouver"],tip:"Ottawa est choisie en 1857 par la reine Victoria — encore une fois pour calmer la rivalité entre Toronto et Montréal."},
+{cat:"🌍 Géographie",q:"Quel est le plus long fleuve du monde ?",a:["Le Nil","L'Amazone","Le Yangtsé","Le Mississippi"],tip:"Le Nil dépasse 6 650 km. L'Amazone transporte en revanche bien plus d'eau — 20 % de l'eau douce mondiale."},
+{cat:"🌍 Géographie",q:"Dans quel pays se trouve le mont Kilimandjaro ?",a:["Tanzanie","Kenya","Éthiopie","Ouganda"],tip:"À 5 895 m, c'est le plus haut sommet d'Afrique. Son sommet enneigé perd 82 % de sa glace depuis 1912."},
+{cat:"🌍 Géographie",q:"Quelle est la plus grande île du monde ?",a:["Groenland","Nouvelle-Guinée","Bornéo","Madagascar"],tip:"Le Groenland fait 2,1 millions de km² — techniquement un continent selon certains géographes."},
+{cat:"🌍 Géographie",q:"Quel fleuve traverse Paris ?",a:["La Seine","La Loire","Le Rhône","La Garonne"],tip:"La Seine mesure 775 km. Paris est construite autour de l'île de la Cité, le berceau historique de la ville."},
+{cat:"🌍 Géographie",q:"Quel est le plus grand désert du monde ?",a:["Antarctique","Sahara","Arabie","Gobi"],tip:"L'Antarctique est un désert froid de 14 millions de km². Le Sahara n'arrive qu'en troisième position !"},
+{cat:"🌍 Géographie",q:"Quelle mer est la plus salée du monde ?",a:["Mer Morte","Mer Rouge","Mer Caspienne","Mer Méditerranée"],tip:"La Mer Morte atteint 34 % de sel — 10 fois plus que l'océan. On y flotte naturellement sans nager."},
+{cat:"🌍 Géographie",q:"Quelle est la capitale du Brésil ?",a:["Brasília","Rio de Janeiro","São Paulo","Salvador"],tip:"Brasília est construite de zéro en 1960. Son plan vu du ciel ressemble à un avion ou un oiseau."},
+{cat:"🌍 Géographie",q:"Quel est le plus grand océan du monde ?",a:["Pacifique","Atlantique","Indien","Arctique"],tip:"Le Pacifique représente à lui seul 46 % de la surface océanique mondiale — plus grand que tous les continents réunis."},
+{cat:"🌍 Géographie",q:"Quelle ville est à cheval sur deux continents ?",a:["Istanbul","Moscou","Le Caire","Tbilissi"],tip:"Istanbul est à la fois en Europe et en Asie, séparée par le détroit du Bosphore — vieille de 2 700 ans."},
+{cat:"🌍 Géographie",q:"Quel pays est le plus peuplé du monde (2024) ?",a:["Inde","Chine","États-Unis","Indonésie"],tip:"L'Inde a dépassé la Chine en 2023 avec 1,43 milliard d'habitants."},
+{cat:"🌍 Géographie",q:"Quelle chaîne de montagnes sépare la France de l'Espagne ?",a:["Les Pyrénées","Les Alpes","Le Massif Central","Le Jura"],tip:"Les Pyrénées s'étendent sur 430 km d'un océan à l'autre — elles n'ont jamais été franchies par les armées romaines."},
+{cat:"🌍 Géographie",q:"Quel est le plus haut sommet du monde ?",a:["L'Everest","K2","Kangchenjunga","Lhotse"],tip:"L'Everest culmine à 8 849 m. Son nom tibétain est Chomolungma — 'Déesse mère du monde'."},
+{cat:"🌍 Géographie",q:"Dans quel pays se trouve le désert du Sahara le plus largement ?",a:["Algérie","Libye","Mali","Niger"],tip:"L'Algérie est le plus grand pays d'Afrique depuis 2011 et abrite la plus grande portion du Sahara."},
+{cat:"🌍 Géographie",q:"Quelle est la capitale du Japon ?",a:["Tokyo","Kyoto","Osaka","Hiroshima"],tip:"Tokyo est la mégalopole la plus peuplée du monde avec plus de 37 millions d'habitants dans l'agglomération."},
+{cat:"🌍 Géographie",q:"Quel pays possède le plus grand nombre de lacs au monde ?",a:["Canada","Russie","Suède","Finlande"],tip:"Le Canada possède plus de 2 millions de lacs — soit environ 60 % des lacs d'eau douce de la planète."},
+{cat:"🌍 Géographie",q:"Quelle est la capitale de l'Argentine ?",a:["Buenos Aires","Rosario","Córdoba","Mendoza"],tip:"Buenos Aires signifie 'vents favorables' en espagnol — fondée en 1580 par les conquistadors."},
+{cat:"🌍 Géographie",q:"Quel est le plus petit État du monde ?",a:["Vatican","Monaco","Saint-Marin","Liechtenstein"],tip:"Le Vatican fait 0,44 km² — plus petit que le Parc du Luxembourg à Paris."},
+{cat:"🌍 Géographie",q:"Quel pays produit le plus de café dans le monde ?",a:["Brésil","Vietnam","Colombie","Éthiopie"],tip:"Le Brésil produit environ 40 % du café mondial. Le café est né en Éthiopie selon la légende du berger Kaldi."},
+{cat:"🌍 Géographie",q:"Quel détroit sépare l'Europe de l'Afrique ?",a:["Détroit de Gibraltar","Détroit de Messine","Détroit de Malacca","Détroit de Béring"],tip:"Le détroit de Gibraltar ne mesure que 14 km à son point le plus étroit — il relie la Méditerranée à l'Atlantique."},
+{cat:"🌍 Géographie",q:"Quelle est la capitale de la Turquie ?",a:["Ankara","Istanbul","Izmir","Bursa"],tip:"Istanbul est plus grande et célèbre, mais Ankara est la capitale depuis 1923 — choix d'Atatürk pour moderniser la Turquie."},
+{cat:"🌍 Géographie",q:"Quel continent est le plus peuplé ?",a:["Asie","Afrique","Europe","Amérique"],tip:"L'Asie compte plus de 4,7 milliards d'habitants — soit 60 % de la population mondiale."},
+{cat:"🌍 Géographie",q:"Quel est le pays le plus grand d'Afrique ?",a:["Algérie","République Démocratique du Congo","Soudan","Libye"],tip:"L'Algérie, avec 2,38 millions de km², est devenue le plus grand pays d'Afrique après l'indépendance du Soudan du Sud."},
+{cat:"🌍 Géographie",q:"Où se trouve la mer des Caraïbes ?",a:["Entre l'Amérique centrale et les Antilles","Entre l'Afrique et l'Amérique du Sud","Au nord du Canada","Dans le Pacifique"],tip:"La mer des Caraïbes doit son nom aux Caraïbes, peuple amérindien qui peuplait les Antilles."},
+{cat:"🌍 Géographie",q:"Quelle rivière délimite en partie la frontière entre la France et l'Allemagne ?",a:["Le Rhin","La Moselle","La Meuse","Le Danube"],tip:"Le Rhin fait 1 230 km et traverse 6 pays. Il est le fleuve le plus navigué d'Europe."},
+{cat:"🌍 Géographie",q:"Combien de départements compte la France métropolitaine ?",a:["96","95","98","91"],tip:"96 départements en métropole, 101 avec les DOM (Guadeloupe, Martinique, Guyane, La Réunion, Mayotte)."},
+{cat:"🌍 Géographie",q:"Quel pays est entouré uniquement par l'Italie ?",a:["Saint-Marin","Vatican","Monaco","Andorre"],tip:"Saint-Marin se dit être la plus ancienne république du monde, fondée en 301 par le tailleur de pierre Marinus."},
+{cat:"🌍 Géographie",q:"Dans quel pays se trouve Machu Picchu ?",a:["Pérou","Bolivie","Équateur","Colombie"],tip:"Machu Picchu est une cité inca du XVe siècle, redécouverte par Hiram Bingham en 1911. Elle n'a jamais été trouvée par les Espagnols."},
 
-  // HISTOIRE
-  { cat:"🏛️ Histoire", q:"En quelle année a eu lieu la Révolution française ?", a:["1789","1792","1776","1804"], correct:0, tip:"Émilien : 1789, avec la prise de la Bastille le 14 juillet — désormais fête nationale !" },
-  { cat:"🏛️ Histoire", q:"Qui a peint la Joconde ?", a:["Léonard de Vinci","Michel-Ange","Raphaël","Botticelli"], correct:0, tip:"Émilien : De Vinci a commencé ce tableau vers 1503 — et il ne l'a jamais livré à son commanditaire !" },
-  { cat:"🏛️ Histoire", q:"Quel roi de France était surnommé 'le Roi-Soleil' ?", a:["Louis XIV","Louis XIII","Louis XVI","Henri IV"], correct:0, tip:"Émilien : Louis XIV a régné 72 ans — le plus long règne de l'histoire de France !" },
-  { cat:"🏛️ Histoire", q:"Qui était le premier président de la Ve République française ?", a:["Charles de Gaulle","Georges Pompidou","François Mitterrand","Valéry Giscard d'Estaing"], correct:0, tip:"Émilien : De Gaulle est élu en 1958 et reste président jusqu'en 1969 !" },
-  { cat:"🏛️ Histoire", q:"En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?", a:["1969","1972","1965","1967"], correct:0, tip:"Émilien : Apollo 11, le 21 juillet 1969 — Neil Armstrong et Buzz Aldrin !" },
-  { cat:"🏛️ Histoire", q:"Quelle ville antique a été détruite par l'éruption du Vésuve en 79 apr. J.-C. ?", a:["Pompéi","Herculanum","Naples","Paestum"], correct:0, tip:"Émilien : Pompéi ET Herculanum ont été englouties, mais Pompéi est la plus célèbre !" },
+// ── HISTOIRE ──
+{cat:"🏛️ Histoire",q:"En quelle année a eu lieu la Révolution française ?",a:["1789","1792","1776","1804"],tip:"1789 : prise de la Bastille le 14 juillet, devenue fête nationale. La Bastille ne contenait que 7 prisonniers ce jour-là !"},
+{cat:"🏛️ Histoire",q:"Qui a découvert l'Amérique en 1492 ?",a:["Christophe Colomb","Amerigo Vespucci","Vasco de Gama","Magellan"],tip:"Colomb pensait arriver aux Indes. C'est Amerigo Vespucci qui comprit que c'était un nouveau continent — d'où le nom Amérique."},
+{cat:"🏛️ Histoire",q:"En quelle année s'est terminée la Première Guerre Mondiale ?",a:["1918","1919","1916","1920"],tip:"L'armistice est signé le 11 novembre 1918 à 11h — 11e heure du 11e jour du 11e mois. Une date symbolique choisie exprès."},
+{cat:"🏛️ Histoire",q:"Qui était le premier homme dans l'espace ?",a:["Youri Gagarine","Neil Armstrong","Buzz Aldrin","Alan Shepard"],tip:"Gagarine part le 12 avril 1961. Son vol dure 108 minutes. Il dit en orbite : 'La Terre est bleue. Comme c'est magnifique !'"},
+{cat:"🏛️ Histoire",q:"Quand est tombé le Mur de Berlin ?",a:["1989","1991","1987","1993"],tip:"Le 9 novembre 1989, les Allemands démantèlent le mur à coups de pioche. Il avait divisé Berlin pendant 28 ans."},
+{cat:"🏛️ Histoire",q:"Quel roi de France est surnommé 'le Roi-Soleil' ?",a:["Louis XIV","Louis XIII","Louis XVI","Henri IV"],tip:"Louis XIV a régné 72 ans — le plus long règne d'un monarque européen. Il a dit : 'L'État, c'est moi.'"},
+{cat:"🏛️ Histoire",q:"Qui a construit la Tour Eiffel ?",a:["Gustave Eiffel","Haussmann","Viollet-le-Duc","Le Corbusier"],tip:"La Tour Eiffel est érigée en 2 ans pour l'Exposition universelle de 1889. Elle devait être démolie en 1909 — c'est sa radio qui l'a sauvée."},
+{cat:"🏛️ Histoire",q:"En quelle année Napoléon est-il exilé à Sainte-Hélène ?",a:["1815","1814","1812","1821"],tip:"Après Waterloo (juin 1815), Napoléon est exilé sur cette île volcanique à 2 000 km de l'Afrique. Il y meurt en 1821."},
+{cat:"🏛️ Histoire",q:"Quel est le premier président des États-Unis ?",a:["George Washington","Thomas Jefferson","John Adams","Benjamin Franklin"],tip:"Washington est élu en 1789. Il refuse un troisième mandat, établissant la tradition de deux mandats maximum."},
+{cat:"🏛️ Histoire",q:"Quelle guerre a duré de 1337 à 1453 ?",a:["La Guerre de Cent Ans","La Guerre des Roses","La Reconquista","La Guerre de Trente Ans"],tip:"La Guerre de Cent Ans dure en réalité 116 ans. Jeanne d'Arc y joue un rôle décisif avant d'être brûlée à 19 ans."},
+{cat:"🏛️ Histoire",q:"En quelle année Jules César est-il assassiné ?",a:["44 av. J.-C.","55 av. J.-C.","27 av. J.-C.","100 av. J.-C."],tip:"Les Ides de mars — le 15 mars 44 av. J.-C. César reçoit 23 coups de poignard. Seul le second coup était fatal."},
+{cat:"🏛️ Histoire",q:"Qui a déchiffré les hiéroglyphes égyptiens ?",a:["Champollion","Schliemann","Howard Carter","Belzoni"],tip:"Jean-François Champollion déchiffre les hiéroglyphes en 1822 grâce à la Pierre de Rosette, qui présente le même texte en 3 langues."},
+{cat:"🏛️ Histoire",q:"Quel empire était le plus grand de l'histoire en superficie ?",a:["Empire mongol","Empire britannique","Empire romain","Empire ottoman"],tip:"L'Empire mongol atteint 24 millions de km² au XIIIe siècle sous Gengis Khan et ses successeurs."},
+{cat:"🏛️ Histoire",q:"En quelle année s'est déroulée la Révolution russe ?",a:["1917","1905","1914","1922"],tip:"La révolution d'Octobre 1917 renverse le tsar. Lénine prend le pouvoir et fonde l'URSS, qui durera jusqu'en 1991."},
+{cat:"🏛️ Histoire",q:"Quel pays a accordé le droit de vote aux femmes en premier ?",a:["Nouvelle-Zélande","Finlande","Australie","Norvège"],tip:"La Nouvelle-Zélande en 1893. La France n'accorde ce droit qu'en 1944 — parmi les derniers pays d'Europe occidentale."},
+{cat:"🏛️ Histoire",q:"Qui était Cléopâtre ?",a:["Reine d'Égypte","Impératrice romaine","Reine de Grèce","Prêtresse de Memphis"],tip:"Cléopâtre VII était grecque (dynastioe des Ptolémées). Elle est la première de sa lignée à parler égyptien. Elle parle 9 langues."},
+{cat:"🏛️ Histoire",q:"En quelle année la France a-t-elle aboli l'esclavage définitivement ?",a:["1848","1794","1815","1830"],tip:"Victor Schœlcher obtient l'abolition définitive en 1848. La première abolition date de 1794, mais Napoléon la rétablit en 1802."},
+{cat:"🏛️ Histoire",q:"Quel traité met fin à la Première Guerre Mondiale ?",a:["Traité de Versailles","Traité de Paris","Traité de Vienne","Traité de Berlin"],tip:"Le Traité de Versailles (1919) impose des conditions si dures à l'Allemagne que beaucoup d'historiens le voient comme une cause de la Seconde Guerre Mondiale."},
+{cat:"🏛️ Histoire",q:"Qui est Martin Luther King ?",a:["Leader des droits civiques américains","Fondateur du protestantisme","Président américain","Pasteur allemand"],tip:"Martin Luther King prononce 'I Have a Dream' en 1963 devant 250 000 personnes. Il est assassiné le 4 avril 1968."},
+{cat:"🏛️ Histoire",q:"En quelle année Nelson Mandela est-il libéré de prison ?",a:["1990","1994","1988","1985"],tip:"Mandela passe 27 ans en prison. Libéré en 1990, il devient président de l'Afrique du Sud en 1994 — premier président noir."},
+{cat:"🏛️ Histoire",q:"Qui est Vercingétorix ?",a:["Chef gaulois vaincu par César","Roi romain","Guerrier grec","Général carthaginois"],tip:"Vercingétorix est vaincu à Alésia en 52 av. J.-C. Capturé, il est emmené à Rome et exécuté 6 ans plus tard."},
+{cat:"🏛️ Histoire",q:"Quel pharaon est associé aux grandes pyramides de Gizeh ?",a:["Khéops","Ramsès II","Toutânkhamon","Néfertiti"],tip:"La Grande Pyramide de Khéops est construite vers 2560 av. J.-C. Elle reste l'une des 7 merveilles du monde antique encore debout."},
+{cat:"🏛️ Histoire",q:"Quand a été fondée la ville de Rome selon la tradition ?",a:["753 av. J.-C.","509 av. J.-C.","476 av. J.-C.","27 av. J.-C."],tip:"Selon la légende, Romulus fonde Rome le 21 avril 753 av. J.-C. Le nom Rome viendrait du sien."},
+{cat:"🏛️ Histoire",q:"Quel événement déclenche la Seconde Guerre Mondiale ?",a:["L'invasion de la Pologne","L'attentat de Sarajevo","La crise de 1929","L'Anschluss"],tip:"Hitler envahit la Pologne le 1er septembre 1939. L'Angleterre et la France déclarent la guerre à l'Allemagne le 3 septembre."},
+{cat:"🏛️ Histoire",q:"Qui a rédigé la Déclaration des droits de l'homme en 1789 ?",a:["L'Assemblée nationale constituante","Robespierre seul","Napoléon Bonaparte","Louis XVI"],tip:"La DDHC est adoptée le 26 août 1789. Elle proclame liberté, égalité, sûreté et résistance à l'oppression."},
+{cat:"🏛️ Histoire",q:"Quand Charlemagne est-il couronné Empereur d'Occident ?",a:["800 apr. J.-C.","768 apr. J.-C.","751 apr. J.-C.","814 apr. J.-C."],tip:"Charlemagne est couronné par le pape Léon III le jour de Noël 800 à Rome. Il unifie une grande partie de l'Europe."},
+{cat:"🏛️ Histoire",q:"Quel est le nom de l'opération du débarquement en Normandie (1944) ?",a:["Opération Overlord","Opération Torch","Opération Barbarossa","Opération Market Garden"],tip:"Le 6 juin 1944 (Jour J), 156 000 soldats alliés débarquent sur 5 plages normandes. C'est la plus grande opération amphibie de l'histoire."},
+{cat:"🏛️ Histoire",q:"Qui est l'inventeur de l'imprimerie à caractères mobiles en Europe ?",a:["Gutenberg","Léonard de Vinci","Roger Bacon","Copernic"],tip:"Gutenberg invente sa presse vers 1450. La Bible de Gutenberg (1455) est l'un des premiers livres imprimés — il en reste 48 exemplaires."},
+{cat:"🏛️ Histoire",q:"Quel scientifique est condamné par l'Inquisition pour avoir soutenu que la Terre tourne ?",a:["Galilée","Copernic","Kepler","Bruno"],tip:"Galilée est condamné en 1633 à l'assignation à résidence. La légende lui prête les mots 'Et pourtant elle tourne !'"},
+{cat:"🏛️ Histoire",q:"En quelle année la France est-elle devenue une République ?",a:["1792","1789","1799","1804"],tip:"La Première République est proclamée le 21 septembre 1792. La France est aujourd'hui sous la Ve République, née en 1958."},
 
-  // SCIENCES
-  { cat:"🔬 Sciences", q:"Quel est le symbole chimique de l'or ?", a:["Au","Or","Go","Ag"], correct:0, tip:"Émilien : Au vient du latin 'Aurum' — d'où le mot 'aurore' qui signifie 'dorée' !" },
-  { cat:"🔬 Sciences", q:"Combien de planètes compte notre système solaire ?", a:["8","9","7","10"], correct:0, tip:"Émilien : Depuis 2006, Pluton est classée 'planète naine' — donc 8 planètes officielles !" },
-  { cat:"🔬 Sciences", q:"Quelle est la vitesse de la lumière (environ) ?", a:["300 000 km/s","150 000 km/s","1 000 000 km/s","30 000 km/s"], correct:0, tip:"Émilien : 299 792 km/s exactement — la lumière met 8 minutes pour aller du Soleil à la Terre !" },
-  { cat:"🔬 Sciences", q:"Quel organe du corps humain produit l'insuline ?", a:["Le pancréas","Le foie","L'estomac","Les reins"], correct:0, tip:"Émilien : Le pancréas est à la fois une glande exocrine (enzymes) et endocrine (insuline) !" },
-  { cat:"🔬 Sciences", q:"Quel est l'élément le plus abondant dans l'univers ?", a:["Hydrogène","Hélium","Oxygène","Carbone"], correct:0, tip:"Émilien : L'hydrogène représente environ 75% de la masse de l'univers observable !" },
-  { cat:"🔬 Sciences", q:"Combien de chromosomes possède l'être humain ?", a:["46","48","44","23"], correct:0, tip:"Émilien : 46 chromosomes, soit 23 paires — dont une paire sexuelle XX ou XY !" },
+// ── SCIENCES ──
+{cat:"🔬 Sciences",q:"Quel est le symbole chimique de l'or ?",a:["Au","Or","Go","Ag"],tip:"Au vient du latin 'Aurum'. L'argent, Ag, vient d'Argentum. Plomb = Pb (Plumbum), d'où le mot 'plombier' !"},
+{cat:"🔬 Sciences",q:"Combien de planètes compte notre système solaire ?",a:["8","9","7","10"],tip:"Depuis 2006, Pluton est requalifiée en planète naine. Les 8 planètes : Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus, Neptune."},
+{cat:"🔬 Sciences",q:"Quelle est la formule chimique de l'eau ?",a:["H₂O","HO₂","H₃O","OH"],tip:"2 atomes d'hydrogène + 1 d'oxygène. L'eau est la seule substance naturelle à se trouver en 3 états (solide, liquide, gaz) sur Terre."},
+{cat:"🔬 Sciences",q:"Qui a découvert la structure de l'ADN ?",a:["Watson et Crick","Pasteur","Darwin","Mendel"],tip:"Watson et Crick publient en 1953, aidés des travaux de Rosalind Franklin, dont la photo 51 aux rayons X est décisive."},
+{cat:"🔬 Sciences",q:"Quelle planète est la plus grande du système solaire ?",a:["Jupiter","Saturne","Uranus","Neptune"],tip:"Jupiter est si grande qu'elle contient 1 300 fois le volume de la Terre. Sa Grande Tache Rouge est une tempête qui dure depuis 350 ans."},
+{cat:"🔬 Sciences",q:"Quel gaz représente la plus grande part de l'atmosphère terrestre ?",a:["Azote","Oxygène","Argon","Dioxyde de carbone"],tip:"L'air est composé à 78 % d'azote, 21 % d'oxygène, 1 % d'argon. Le CO₂ représente seulement 0,04 % — mais son impact climatique est énorme."},
+{cat:"🔬 Sciences",q:"Combien d'os le corps humain adulte possède-t-il ?",a:["206","213","196","220"],tip:"À la naissance, on a ~270 os. Certains fusionnent en grandissant. Le plus petit os est l'étrier, dans l'oreille (3 mm)."},
+{cat:"🔬 Sciences",q:"Qui a formulé la théorie de la relativité ?",a:["Einstein","Newton","Planck","Bohr"],tip:"Einstein publie la relativité restreinte en 1905 (à 26 ans !) et la relativité générale en 1915. E=mc² change notre vision du monde."},
+{cat:"🔬 Sciences",q:"Quel organe produit l'insuline ?",a:["Le pancréas","Le foie","Les reins","L'estomac"],tip:"Le pancréas est à la fois exocrine (enzymes digestives) et endocrine (insuline et glucagon). Il pèse seulement 70 g."},
+{cat:"🔬 Sciences",q:"Quel est le métal liquide à température ambiante ?",a:["Mercure","Plomb","Gallium","Bismuth"],tip:"Le mercure (Hg) est liquide dès -39°C. Le gallium, lui, fond à 29°C — dans la paume de la main !"},
+{cat:"🔬 Sciences",q:"Quelle planète tourne dans le sens inverse des autres ?",a:["Vénus","Mars","Mercure","Uranus"],tip:"Vénus tourne à l'envers : le soleil s'y lève à l'ouest. De plus, une journée vénusienne est plus longue qu'une année vénusienne."},
+{cat:"🔬 Sciences",q:"Quel est le plus petit os du corps humain ?",a:["L'étrier","La clavicule","Le pisiforme","Le stapes nasal"],tip:"L'étrier se trouve dans l'oreille interne et mesure 3 mm. Sans lui, nous ne pourrions pas entendre les sons."},
+{cat:"🔬 Sciences",q:"Quel élément est le plus abondant dans l'univers ?",a:["Hydrogène","Hélium","Oxygène","Carbone"],tip:"L'hydrogène représente 73 % de la masse de l'univers. Il est le carburant des étoiles via la fusion nucléaire."},
+{cat:"🔬 Sciences",q:"Quelle est la vitesse de la lumière (approximativement) ?",a:["300 000 km/s","150 000 km/s","450 000 km/s","1 000 000 km/s"],tip:"299 792 458 m/s exactement. La lumière met 8 minutes pour aller du Soleil à la Terre, et 4 ans pour atteindre l'étoile la plus proche."},
+{cat:"🔬 Sciences",q:"Qui a découvert la pénicilline ?",a:["Alexander Fleming","Louis Pasteur","Marie Curie","Robert Koch"],tip:"Fleming découvre la pénicilline par hasard en 1928 : une moisissure contaminait sa boîte de Pétri et tuait les bactéries."},
+{cat:"🔬 Sciences",q:"Quel est le pH de l'eau pure ?",a:["7","6","8","5"],tip:"Le pH 7 est neutre. En dessous = acide (citron = 2), au-dessus = basique (eau de Javel = 12). Notre sang a un pH de 7,4."},
+{cat:"🔬 Sciences",q:"Combien de chromosomes l'être humain possède-t-il ?",a:["46","48","44","23"],tip:"46 chromosomes en 23 paires. La paire 23 détermine le sexe : XX pour les femmes, XY pour les hommes."},
+{cat:"🔬 Sciences",q:"Quel phénomène explique que la Lune reste en orbite autour de la Terre ?",a:["La gravitation","Le magnétisme","L'électricité","La friction"],tip:"Newton formule la loi de la gravitation universelle en voyant une pomme tomber (selon la légende). C'est la même force qui fait tomber la pomme et tient la Lune."},
+{cat:"🔬 Sciences",q:"Quelle est la durée d'une grossesse humaine moyenne ?",a:["9 mois","8 mois","10 mois","7 mois"],tip:"Environ 280 jours (40 semaines). L'éléphant détient le record avec 22 mois de gestation."},
+{cat:"🔬 Sciences",q:"Qui a créé la table périodique des éléments ?",a:["Mendeleïev","Lavoisier","Dalton","Bohr"],tip:"Mendeleïev publie sa table en 1869. Il laisse des cases vides pour des éléments à découvrir — et il a eu raison pour tous !"},
+{cat:"🔬 Sciences",q:"Quel organe est responsable du pompage du sang ?",a:["Le cœur","Le foie","Les poumons","Le cerveau"],tip:"Le cœur bat en moyenne 70 fois par minute, 100 000 fois par jour, 3 milliards de fois dans une vie — sans jamais se reposer."},
+{cat:"🔬 Sciences",q:"Qu'est-ce que la photosynthèse produit ?",a:["Oxygène et glucose","CO₂ et eau","Azote et glucides","Chaleur et lumière"],tip:"Les plantes captent CO₂ et lumière pour produire glucose (énergie) et O₂. Elles absorbent 2,5 milliards de tonnes de carbone par an."},
+{cat:"🔬 Sciences",q:"À quelle température l'eau bout-elle au niveau de la mer ?",a:["100°C","90°C","110°C","95°C"],tip:"À haute altitude, l'eau bout à moins de 100°C car la pression atmosphérique est plus faible. Au sommet de l'Everest : ~70°C."},
+{cat:"🔬 Sciences",q:"Combien de neurones le cerveau humain possède-t-il environ ?",a:["86 milliards","100 milliards","10 milliards","50 milliards"],tip:"86 milliards de neurones, mais aussi 85 milliards de cellules gliales. Chaque neurone peut avoir jusqu'à 10 000 connexions."},
+{cat:"🔬 Sciences",q:"Dans quel sens le son voyage-t-il le plus vite ?",a:["Dans l'eau","Dans l'air","Dans le vide","Dans le bois"],tip:"Le son va à ~340 m/s dans l'air, ~1 500 m/s dans l'eau et ~5 000 m/s dans le métal. Dans le vide, il ne se propage pas du tout."},
+{cat:"🔬 Sciences",q:"Quel est le gaz à effet de serre le plus puissant ?",a:["Vapeur d'eau","CO₂","Méthane","Protoxyde d'azote"],tip:"La vapeur d'eau représente 50 à 70 % de l'effet de serre naturel. Le CO₂ n'en représente que 9 à 26 %, mais c'est lui qui augmente à cause de l'homme."},
+{cat:"🔬 Sciences",q:"Qu'est-ce qu'un photon ?",a:["Une particule de lumière","Un type d'atome","Un proton chargé","Une onde magnétique"],tip:"Le photon n'a pas de masse au repos et voyage à la vitesse de la lumière. Einstein a défini le photon en 1905 — c'est ce travail (pas la relativité) qui lui vaut le Nobel."},
+{cat:"🔬 Sciences",q:"Quel est l'élément chimique dont le symbole est Fe ?",a:["Fer","Fluor","Fermium","Francium"],tip:"Fe vient du latin 'Ferrum'. Le fer est le 4e élément le plus abondant de la croûte terrestre et forme le noyau de la Terre."},
+{cat:"🔬 Sciences",q:"Quel os protège le cerveau ?",a:["Le crâne","La cage thoracique","Le rachis","Les pommettes"],tip:"Le crâne est composé de 22 os. Les fontanelles des bébés (zones molles) permettent le passage lors de l'accouchement."},
+{cat:"🔬 Sciences",q:"Quelle est la source d'énergie du Soleil ?",a:["La fusion nucléaire","La fission nucléaire","La combustion chimique","La gravitation"],tip:"Le Soleil fusionne 600 millions de tonnes d'hydrogène par seconde. Il brûle ainsi depuis 4,6 milliards d'années et en a encore pour 5 milliards."},
 
-  // LITTÉRATURE
-  { cat:"📚 Littérature", q:"Qui a écrit 'Les Misérables' ?", a:["Victor Hugo","Gustave Flaubert","Émile Zola","Alexandre Dumas"], correct:0, tip:"Émilien : Victor Hugo a publié ce chef-d'œuvre en 1862 — après 17 ans de travail !" },
-  { cat:"📚 Littérature", q:"Dans quel roman retrouve-t-on le personnage d'Edmond Dantès ?", a:["Le Comte de Monte-Cristo","Les Trois Mousquetaires","Vingt Mille Lieues sous les mers","Germinal"], correct:0, tip:"Émilien : Alexandre Dumas a écrit ce roman feuilleton en 1844 — un record de rebondissements !" },
-  { cat:"📚 Littérature", q:"Qui a écrit 'À la recherche du temps perdu' ?", a:["Marcel Proust","André Gide","Paul Valéry","Stendhal"], correct:0, tip:"Émilien : Cette œuvre en 7 volumes est l'une des plus longues de la littérature française !" },
-  { cat:"📚 Littérature", q:"Comment s'appelle le robot dans 'Le Petit Prince' de Saint-Exupéry ?", a:["Il n'y a pas de robot","R2D2","Astérix","Tintin"], correct:0, tip:"Émilien : Il y a un serpent, un renard, une rose — mais pas de robot ! Le Petit Prince reste poétique !" },
+// ── LITTÉRATURE ──
+{cat:"📚 Littérature",q:"Qui a écrit 'Les Misérables' ?",a:["Victor Hugo","Gustave Flaubert","Émile Zola","Alexandre Dumas"],tip:"Publié en 1862, Victor Hugo met 17 ans à l'écrire. Le télégramme le plus court de l'histoire littéraire : '?' (Hugo) → '!' (son éditeur)."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Madame Bovary' ?",a:["Gustave Flaubert","Victor Hugo","Émile Zola","Stendhal"],tip:"Flaubert est poursuivi en justice pour 'immoralité' à la publication en 1857. Il dira : 'Madame Bovary, c'est moi.'"},
+{cat:"📚 Littérature",q:"Qui a écrit '1984' ?",a:["George Orwell","Aldous Huxley","Ray Bradbury","H.G. Wells"],tip:"Orwell écrit 1984 en 1948 — il inverse les deux derniers chiffres. Big Brother, la Novlangue, le Ministère de la Vérité y sont inventés."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Don Quichotte' ?",a:["Cervantes","Lope de Vega","Calderon","Tirso de Molina"],tip:"Don Quichotte (1605) est souvent cité comme le premier roman moderne. Cervantes et Shakespeare sont morts le même jour en 1616."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Crime et Châtiment' ?",a:["Dostoïevski","Tolstoï","Tchekhov","Tourgueniev"],tip:"Dostoïevski écrit ce chef-d'œuvre en 1866 pour rembourser ses dettes de jeu. Il dicte le roman à sa sténographe — qu'il épouse ensuite."},
+{cat:"📚 Littérature",q:"Quel écrivain est l'auteur des 'Fables' ?",a:["La Fontaine","Molière","Racine","Corneille"],tip:"Jean de La Fontaine publie ses Fables entre 1668 et 1694. Elles s'inspirent d'Ésope (Grèce antique) et de Phèdre (Rome)."},
+{cat:"📚 Littérature",q:"Qui a créé Sherlock Holmes ?",a:["Arthur Conan Doyle","Agatha Christie","Edgar Allan Poe","Wilkie Collins"],tip:"Conan Doyle finit par détester Holmes et le 'tue' en 1893 dans les chutes de Reichenbach. Le public proteste si fort qu'il le ressuscite."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Robinson Crusoé' ?",a:["Daniel Defoe","Jonathan Swift","Henry Fielding","Samuel Richardson"],tip:"Publié en 1719, Robinson Crusoé est inspiré de l'histoire vraie d'Alexandre Selkirk, abandonné 4 ans sur une île déserte."},
+{cat:"📚 Littérature",q:"Quel écrivain a refusé le Prix Nobel de littérature en 1964 ?",a:["Jean-Paul Sartre","Albert Camus","Samuel Beckett","André Malraux"],tip:"Sartre refuse le Nobel au nom de l'indépendance de l'écrivain. Il dit : 'Je refuse les distinctions officielles.'"},
+{cat:"📚 Littérature",q:"Qui a écrit 'Les Fleurs du Mal' ?",a:["Baudelaire","Verlaine","Rimbaud","Mallarmé"],tip:"Baudelaire est condamné en 1857 pour 'offense à la morale publique'. 6 poèmes sont censurés jusqu'en... 1949."},
+{cat:"📚 Littérature",q:"Qui est l'auteur des 'Rougon-Macquart' (série de 20 romans) ?",a:["Émile Zola","Victor Hugo","Balzac","Flaubert"],tip:"Zola écrit 20 romans sur 3 générations d'une famille. Son 'J'Accuse' (1898) défend Dreyfus dans l'affaire qui divise la France."},
+{cat:"📚 Littérature",q:"Qui a écrit 'L'Étranger' ?",a:["Albert Camus","Jean-Paul Sartre","Simone de Beauvoir","André Gide"],tip:"Camus publie L'Étranger en 1942 à 29 ans. Il reçoit le Nobel en 1957 — l'un des plus jeunes Français lauréats."},
+{cat:"📚 Littérature",q:"Dans quel roman trouve-t-on les personnages Athos, Porthos et Aramis ?",a:["Les Trois Mousquetaires","Le Comte de Monte-Cristo","Vingt Ans après","Le Vicomte de Bragelonne"],tip:"Dumas crée les Mousquetaires en 1844 sous forme de feuilleton. D'Artagnan est gascon, comme Dumas s'imaginait être."},
+{cat:"📚 Littérature",q:"Qui a écrit l'Odyssée et l'Iliade ?",a:["Homère","Hésiode","Sophocle","Eschyle"],tip:"Homère aurait vécu au VIIIe siècle av. J.-C. Certains historiens pensent qu'il est aveugle — d'autres qu'il est une figure mythique."},
+{cat:"📚 Littérature",q:"Qui a créé Tintin ?",a:["Hergé","Franquin","Uderzo","Peyo"],tip:"Hergé (Georges Remi) crée Tintin en 1929. Il est inspiré par son jeune frère Paul pour le visage du personnage."},
+{cat:"📚 Littérature",q:"Qui a créé Astérix ?",a:["Goscinny et Uderzo","Hergé","Franquin","Mézières"],tip:"René Goscinny (scénario) et Albert Uderzo (dessin) créent Astérix en 1959. C'est la BD francophone la plus vendue au monde."},
+{cat:"📚 Littérature",q:"Quel roman de Victor Hugo se passe à Paris au Moyen Âge ?",a:["Notre-Dame de Paris","Les Misérables","Han d'Islande","L'Homme qui rit"],tip:"Publié en 1831, Notre-Dame de Paris décrit la cathédrale si bien que le roman a relancé les travaux de restauration."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Le Petit Prince' ?",a:["Antoine de Saint-Exupéry","Marcel Pagnol","Jean Giraudoux","Paul Claudel"],tip:"Écrit en 1943 exil aux États-Unis, le Petit Prince est le livre français le plus traduit au monde (300 langues)."},
+{cat:"📚 Littérature",q:"Dans quel pays se déroule 'Guerre et Paix' de Tolstoï ?",a:["Russie","France","Angleterre","Allemagne"],tip:"Tolstoï décrit l'invasion napoléonienne de la Russie (1812). Le roman compte 580 personnages et fait 1 500 pages."},
+{cat:"📚 Littérature",q:"Qui est l'auteur du 'Seigneur des Anneaux' ?",a:["J.R.R. Tolkien","C.S. Lewis","George R.R. Martin","Terry Pratchett"],tip:"Tolkien invente les langues elfiques (quenya, sindarin) avant même d'écrire l'histoire. Il est professeur d'Oxford."},
+{cat:"📚 Littérature",q:"Quel auteur écrit la saga 'Harry Potter' ?",a:["J.K. Rowling","Tolkien","Roald Dahl","Philip Pullman"],tip:"J.K. Rowling invente Harry Potter en 1990 dans un train en retard. Elle est refusée par 12 éditeurs avant la publication en 1997."},
+{cat:"📚 Littérature",q:"Qui est l'auteur du 'Comte de Monte-Cristo' ?",a:["Alexandre Dumas","Victor Hugo","Stendhal","Balzac"],tip:"Dumas emploie des dizaines de nègres littéraires. Il revendique : 'Je n'ai pas écrit tous mes livres, mais j'en ai eu les idées.'"},
+{cat:"📚 Littérature",q:"Dans quel livre se trouve la fameuse phrase 'Je pense donc je suis' ?",a:["Discours de la méthode","Le Léviathan","L'Éthique","Méditations"],tip:"Descartes publie cela en 1637 en français (pas en latin) — volontairement, pour que tout le monde puisse le lire."},
+{cat:"📚 Littérature",q:"Quel personnage de Shakespeare dit 'Être ou ne pas être' ?",a:["Hamlet","Macbeth","Othello","Roméo"],tip:"Hamlet prononce ce monologue face au dilemme vie/mort. La pièce est écrite vers 1600 et c'est la plus longue de Shakespeare."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Voyage au centre de la Terre' ?",a:["Jules Verne","H.G. Wells","Edgar Allan Poe","Arthur Conan Doyle"],tip:"Jules Verne préfigure le sous-marin, l'avion, la capsule spatiale, la vidéoconférence et internet dans ses romans."},
+{cat:"📚 Littérature",q:"Quel mouvement littéraire est associé à Zola, Maupassant et les frères Goncourt ?",a:["Naturalisme","Romantisme","Symbolisme","Réalisme pur"],tip:"Le naturalisme applique les méthodes scientifiques à la littérature — Zola fait des 'enquêtes de terrain' avant d'écrire."},
+{cat:"📚 Littérature",q:"Qui a écrit 'Le Rouge et le Noir' ?",a:["Stendhal","Balzac","Flaubert","Mérimée"],tip:"Stendhal (pseudonyme d'Henri Beyle) publie ce roman en 1830. Il dit qu'il sera compris dans 100 ans — il avait raison."},
+{cat:"📚 Littérature",q:"Dans quel roman d'Aldous Huxley imagine-t-on un monde contrôlé par le bonheur artificiel ?",a:["Le Meilleur des mondes","1984","Fahrenheit 451","La Ferme des animaux"],tip:"Publié en 1932, Le Meilleur des Mondes décrit une société où les humains sont conditionnés dès l'embryon. Glaçant de pertinence."},
+{cat:"📚 Littérature",q:"Quel roman de Camus met en scène une épidémie dans une ville algérienne ?",a:["La Peste","L'Étranger","La Chute","Caligula"],tip:"Publié en 1947, La Peste devient un best-seller mondial pendant le Covid-19 : les ventes ont triplé en 2020."},
+{cat:"📚 Littérature",q:"Qui est l'auteur de 'Germinal' ?",a:["Émile Zola","Guy de Maupassant","Alphonse Daudet","Victor Hugo"],tip:"Germinal (1885) décrit la vie des mineurs du Nord. Zola descend dans une mine pour préparer ce roman — il en ressort transformé."},
 
-  // MUSIQUE
-  { cat:"🎵 Musique", q:"Qui a composé la 9e Symphonie avec l'Ode à la joie ?", a:["Beethoven","Mozart","Bach","Schubert"], correct:0, tip:"Émilien : Beethoven était sourd quand il l'a composée — il ne l'a jamais entendue jouer !" },
-  { cat:"🎵 Musique", q:"Dans quel pays est né le jazz ?", a:["États-Unis","Cuba","Brésil","France"], correct:0, tip:"Émilien : Le jazz est né à la Nouvelle-Orléans à la fin du XIXe siècle — mélange de blues et ragtime !" },
-  { cat:"🎵 Musique", q:"Quel est l'instrument traditionnel de l'Écosse ?", a:["La cornemuse","La harpe","Le violon","La flûte"], correct:0, tip:"Émilien : La cornemuse (bagpipe) est devenue le symbole musical de l'Écosse !" },
-  { cat:"🎵 Musique", q:"Comment s'appelait le groupe des Beatles avant de devenir les Beatles ?", a:["The Quarrymen","The Silver Beetles","The Fab Four","The Cavern Boys"], correct:0, tip:"Émilien : Formé par John Lennon en 1956, le groupe s'appelait The Quarrymen !" },
+// ── MUSIQUE ──
+{cat:"🎵 Musique",q:"Qui a composé la 9e Symphonie avec l'Ode à la joie ?",a:["Beethoven","Mozart","Bach","Schubert"],tip:"Beethoven est sourd quand il compose la 9e. Le jour de la première (1824), il dirige de dos — ne pouvant entendre les applaudissements."},
+{cat:"🎵 Musique",q:"Qui chante 'La Vie en rose' ?",a:["Édith Piaf","Dalida","Barbara","Juliette Gréco"],tip:"La Vie en rose (1946) est écrite et chantée par Piaf. Elle deviendra le symbole de la chanson française dans le monde entier."},
+{cat:"🎵 Musique",q:"Qui a composé 'Les Quatre Saisons' ?",a:["Vivaldi","Bach","Haendel","Telemann"],tip:"Vivaldi compose Les Quatre Saisons vers 1720. Il était prêtre roux — surnommé 'il prete rosso' (le prêtre roux) à Venise."},
+{cat:"🎵 Musique",q:"Qui a composé le 'Boléro' ?",a:["Maurice Ravel","Claude Debussy","Saint-Saëns","Fauré"],tip:"Ravel compose le Boléro en 1928 en 17 minutes — mais il dit que ce n'est 'qu'un exercice d'orchestration, sans musique'."},
+{cat:"🎵 Musique",q:"De quel pays vient le reggae ?",a:["Jamaïque","Cuba","Barbade","Trinidad"],tip:"Le reggae naît en Jamaïque dans les années 60. Bob Marley le popularise mondialement — ses albums se vendent encore 20 millions par an."},
+{cat:"🎵 Musique",q:"Quel groupe britannique a vendu le plus de disques dans l'histoire ?",a:["The Beatles","Rolling Stones","Queen","Led Zeppelin"],tip:"Les Beatles ont vendu plus de 600 millions d'albums. Ils se séparent en 1970 — aucun groupe ne les a égalés depuis."},
+{cat:"🎵 Musique",q:"Qui est le compositeur de 'La Flûte enchantée' ?",a:["Mozart","Beethoven","Haydn","Gluck"],tip:"Mozart compose La Flûte enchantée en 1791, quelques mois avant sa mort à 35 ans. C'est son dernier opéra."},
+{cat:"🎵 Musique",q:"Quel instrument joue Miles Davis ?",a:["Trompette","Saxophone","Piano","Contrebasse"],tip:"Miles Davis révolutionne le jazz à plusieurs reprises : bebop, cool jazz, jazz modal, jazz-rock. 'Kind of Blue' (1959) est l'album de jazz le plus vendu de l'histoire."},
+{cat:"🎵 Musique",q:"Qui est surnommé 'The King' dans le monde de la musique ?",a:["Elvis Presley","Michael Jackson","James Brown","Frank Sinatra"],tip:"Elvis est le premier à mélanger country, gospel et R&B pour créer le rock'n'roll grand public. Il vend 500 millions de disques."},
+{cat:"🎵 Musique",q:"Qui chante 'Thriller', l'album le plus vendu de l'histoire ?",a:["Michael Jackson","Prince","Stevie Wonder","James Brown"],tip:"Thriller (1982) a vendu 70 millions de copies. Le clip est réalisé par John Landis — il dure 14 minutes et coûte 500 000 $."},
+{cat:"🎵 Musique",q:"De quel pays vient le tango ?",a:["Argentine","Espagne","Brésil","Uruguay"],tip:"Le tango naît à Buenos Aires et Montevideo dans les années 1880. Il est inscrit au patrimoine de l'UNESCO depuis 2009."},
+{cat:"🎵 Musique",q:"Qui est Freddie Mercury ?",a:["Chanteur de Queen","Chanteur de U2","Guitariste de Led Zeppelin","Chanteur de Depeche Mode"],tip:"Freddie Mercury est né Farrokh Bulsara à Zanzibar. Il meurt en 1991 du SIDA, 24 heures après avoir révélé sa maladie."},
+{cat:"🎵 Musique",q:"Quel groupe français est derrière 'Get Lucky' et 'One More Time' ?",a:["Daft Punk","Justice","Air","Cassius"],tip:"Daft Punk (Thomas Bangalter et Guy-Manuel de Homem-Christo) portent des casques dorés depuis 1995. Ils se séparent en 2021."},
+{cat:"🎵 Musique",q:"Combien de touches possède un piano classique ?",a:["88","76","92","80"],tip:"88 touches : 52 blanches et 36 noires. Les premiers pianos en avaient 60. Bösendorfer propose des modèles à 92 touches."},
+{cat:"🎵 Musique",q:"Qui a composé 'Le Lac des Cygnes' ?",a:["Tchaïkovski","Prokofiev","Chopin","Liszt"],tip:"Tchaïkovski compose ce ballet en 1875-76. Il est sifflé à la création — il faudra attendre la version remontée en 1895 pour le triomphe."},
+{cat:"🎵 Musique",q:"Quel est l'hymne de l'Union européenne ?",a:["L'Ode à la joie de Beethoven","La Marseillaise","Rule Britannia","L'Hymne à l'Europe"],tip:"L'Ode à la joie (4e mouvement de la 9e Symphonie) devient l'hymne européen en 1985. Le texte de Schiller n'est pas chanté officiellement."},
+{cat:"🎵 Musique",q:"Qui a écrit 'La Marseillaise' ?",a:["Rouget de Lisle","Berlioz","Méhul","Gossec"],tip:"Claude-Joseph Rouget de Lisle compose la Marseillaise en une nuit en 1792 à Strasbourg. Il ne sera jamais vraiment récompensé."},
+{cat:"🎵 Musique",q:"Dans quel pays est né le jazz ?",a:["États-Unis","Cuba","Brésil","France"],tip:"Le jazz naît à la Nouvelle-Orléans vers 1900, mélange de blues africain-américain, ragtime et musique créole."},
+{cat:"🎵 Musique",q:"Quel prix Nobel Bob Dylan reçoit-il en 2016 ?",a:["Prix Nobel de Littérature","Prix Nobel de la Paix","Prix Nobel de Culture","Médaille des Arts"],tip:"Dylan reçoit le Nobel de Littérature 'pour avoir créé de nouvelles expressions poétiques dans la grande tradition de la chanson américaine'. Il ne vient pas chercher son prix."},
+{cat:"🎵 Musique",q:"Quel est le premier nom du groupe des Beatles avant leur changement ?",a:["The Quarrymen","The Silver Beetles","Johnny & the Moondogs","The Cavern Boys"],tip:"John Lennon fonde The Quarrymen en 1956 à Liverpool. Il rencontre Paul McCartney lors d'un concert de ce groupe en juillet 1957."},
+{cat:"🎵 Musique",q:"Qui compose l'opéra 'Carmen' ?",a:["Bizet","Gounod","Berlioz","Offenbach"],tip:"Bizet compose Carmen en 1875. Le soir de la première, l'accueil est glacial. Bizet meurt trois mois plus tard — à 36 ans — sans savoir que ce sera un chef-d'œuvre."},
+{cat:"🎵 Musique",q:"Quelle danse populaire brésilienne est devenue symbole du Brésil ?",a:["Samba","Bossa nova","Capoeira","Forró"],tip:"La samba vient des rythmes africains amenés par les esclaves. Elle est inscrite au patrimoine immatériel de l'UNESCO depuis 2005."},
+{cat:"🎵 Musique",q:"Quel chanteur français est l'auteur de 'Ne me quitte pas' ?",a:["Jacques Brel","Serge Gainsbourg","Georges Brassens","Charles Aznavour"],tip:"Brel écrit cette chanson en 1959. Il la détestait et refusait de la chanter en concert — il la trouvait trop exhibitionniste."},
+{cat:"🎵 Musique",q:"Qui est Amy Winehouse ?",a:["Chanteuse britannique de soul/jazz","Chanteuse pop américaine","Guitariste rock australienne","Chanteuse country"],tip:"Amy Winehouse (1983-2011) remporte 5 Grammy Awards en 2008. Son album Back to Black reste l'un des plus vendus du XXIe siècle."},
+{cat:"🎵 Musique",q:"Quel instrument est au cœur de la musique flamenco ?",a:["Guitare","Violon","Accordéon","Mandoline"],tip:"Le flamenco vient d'Andalousie, fruit des cultures gitane, maure et espagnole. Il est inscrit au patrimoine immatériel de l'UNESCO depuis 2010."},
+{cat:"🎵 Musique",q:"Qui compose 'La Traviata' ?",a:["Verdi","Puccini","Rossini","Donizetti"],tip:"Verdi compose La Traviata en 1853 en moins de 6 semaines. C'est l'un des opéras les plus joués au monde."},
+{cat:"🎵 Musique",q:"Quel instrument traditionnel est associé à l'Écosse ?",a:["Cornemuse","Harpe","Viole","Tin whistle"],tip:"La cornemuse (bagpipe) est jouée dans toute l'armée britannique. Les Highlanders l'utilisaient pour effrayer les ennemis à la guerre."},
+{cat:"🎵 Musique",q:"Qui chante 'Imagine' ?",a:["John Lennon","Paul McCartney","George Harrison","Ringo Starr"],tip:"Imagine (1971) est enregistré chez Lennon à Tittenhurst Park. Il est régulièrement classé dans le top 3 des meilleures chansons de tous les temps."},
+{cat:"🎵 Musique",q:"De quel siècle est Johann Sebastian Bach ?",a:["XVIIIe","XVIIe","XIXe","XVIe"],tip:"Bach (1685-1750) compose plus de 1 000 œuvres. Il est père de 20 enfants (avec 2 femmes). Sa musique est choisie pour être envoyée dans l'espace sur Voyager."},
+{cat:"🎵 Musique",q:"Quel chanteur est surnommé 'The Boss' ?",a:["Bruce Springsteen","Bob Dylan","Tom Waits","Neil Young"],tip:"Bruce Springsteen reçoit ce surnom à cause de son habitude de payer lui-même son groupe au début de sa carrière. Son album Born to Run (1975) est son premier grand succès."},
 
-  // SPORT
-  { cat:"⚽ Sport", q:"Combien de temps dure un match de football (temps réglementaire) ?", a:["90 minutes","80 minutes","100 minutes","120 minutes"], correct:0, tip:"Émilien : 90 minutes, soit deux mi-temps de 45 minutes — sans les prolongations !" },
-  { cat:"⚽ Sport", q:"Quel pays a remporté la Coupe du Monde de football en 1998 ?", a:["France","Brésil","Italie","Allemagne"], correct:0, tip:"Émilien : La France de Zidane a battu le Brésil 3-0 en finale — Zinedine Zidane a marqué 2 buts de la tête !" },
-  { cat:"⚽ Sport", q:"Combien de joueurs compte une équipe de basket-ball sur le terrain ?", a:["5","6","4","7"], correct:0, tip:"Émilien : 5 joueurs par équipe, soit 10 au total sur le terrain — c'est aussi le cas au hockey sur glace !" },
-  { cat:"⚽ Sport", q:"Quel sportif a remporté le plus de titres du Grand Chelem en tennis (hommes) ?", a:["Novak Djokovic","Rafael Nadal","Roger Federer","Pete Sampras"], correct:0, tip:"Émilien : En 2024, Djokovic détient le record avec 24 titres du Grand Chelem !" },
+// ── SPORT ──
+{cat:"⚽ Sport",q:"Combien de joueurs compose une équipe de football sur le terrain ?",a:["11","10","12","9"],tip:"11 joueurs dont un gardien. La règle des 11 vient du Cambridge Rules de 1848 — qui posent aussi les premières règles écrites du football."},
+{cat:"⚽ Sport",q:"Quel pays a remporté le plus de Coupes du Monde de football ?",a:["Brésil","Allemagne","Italie","France"],tip:"Le Brésil a gagné 5 fois (1958, 1962, 1970, 1994, 2002). C'est le seul pays à s'être qualifié pour toutes les phases finales."},
+{cat:"⚽ Sport",q:"Quelle est la distance d'un marathon ?",a:["42,195 km","40 km","45 km","50 km"],tip:"La distance vient du combat de Marathon (490 av. J.-C.). Un soldat court jusqu'à Athènes pour annoncer la victoire — et meurt en arrivant."},
+{cat:"⚽ Sport",q:"Combien de joueurs par équipe au basket-ball ?",a:["5","6","4","7"],tip:"5 joueurs sur le terrain, 12 dans l'équipe. James Naismith invente le basket en 1891 à Springfield (Massachusetts) avec une balle de foot et deux paniers à pêches."},
+{cat:"⚽ Sport",q:"Quel nageur est le plus médaillé de l'histoire des Jeux Olympiques ?",a:["Michael Phelps","Mark Spitz","Ian Thorpe","Ryan Lochte"],tip:"Phelps remporte 28 médailles dont 23 en or. Il participe à 5 Jeux Olympiques entre 2000 et 2016."},
+{cat:"⚽ Sport",q:"Quel pays a accueilli les Jeux Olympiques de 2024 ?",a:["France","Japon","États-Unis","Australie"],tip:"Paris accueille les JO pour la 3e fois (après 1900 et 1924). La cérémonie d'ouverture sur la Seine est la première hors d'un stade."},
+{cat:"⚽ Sport",q:"Quel sport se joue à Wimbledon ?",a:["Tennis","Cricket","Golf","Rugby"],tip:"Wimbledon est le plus ancien tournoi de tennis du monde (1877). C'est le seul Grand Chelem joué sur gazon."},
+{cat:"⚽ Sport",q:"Quelle est la couleur du maillot du leader du Tour de France ?",a:["Jaune","Vert","Blanc","Rouge"],tip:"Le maillot jaune est introduit en 1919 — il reprend la couleur du papier du journal L'Auto, organisateur du Tour."},
+{cat:"⚽ Sport",q:"Quelle est la nationalité d'Usain Bolt ?",a:["Jamaïcaine","Américaine","Canadienne","Trinidadienne"],tip:"Bolt détient les records du 100m (9.58s) et 200m (19.19s). Il est le seul à avoir remporté ces deux épreuves lors de 3 JO consécutifs."},
+{cat:"⚽ Sport",q:"Combien de joueurs dans une équipe de rugby à XV ?",a:["15","13","11","17"],tip:"15 joueurs, dont 8 avants et 7 arrières. La mêlée et le ballon ovale distinguent le rugby du football."},
+{cat:"⚽ Sport",q:"Qui a inventé le rugby ?",a:["William Webb Ellis","James Naismith","Walter Camp","Lord Stanley"],tip:"La légende dit que William Webb Ellis prend le ballon dans les bras lors d'un match de foot à Rugby (Angleterre) en 1823 — et invente ainsi le rugby."},
+{cat:"⚽ Sport",q:"Quel sport utilise un volant ?",a:["Badminton","Squash","Padel","Tennis de table"],tip:"Le volant (shuttlecock) peut atteindre 493 km/h lors d'un smash — record détenu par Mads Pieler Kolding. C'est le projectile le plus rapide au monde dans un sport."},
+{cat:"⚽ Sport",q:"Quel nageur français a dominé les Mondiaux de Budapest 2022 ?",a:["Léon Marchand","Florent Manaudou","Yannick Agnel","Alain Bernard"],tip:"Léon Marchand est né en 2002. Il bat le record du monde du 400m 4 nages en 2023 et remporte 4 médailles d'or aux JO Paris 2024."},
+{cat:"⚽ Sport",q:"Quel pays a inventé le judo ?",a:["Japon","Chine","Corée","Brésil"],tip:"Jigoro Kano fonde le judo en 1882 au Japon. Judo signifie 'voie de la souplesse'. Il devient sport olympique en 1964 à Tokyo."},
+{cat:"⚽ Sport",q:"Combien de sets dans un match de tennis masculin en Grand Chelem ?",a:["5 sets","3 sets","4 sets","6 sets"],tip:"Les matchs masculins en Grand Chelem se jouent au meilleur des 5 sets. Les femmes jouent au meilleur des 3."},
+{cat:"⚽ Sport",q:"Quel est le plus grand stade du monde ?",a:["Rungrado (Corée du Nord)","Camp Nou","Wembley","Maracanã"],tip:"Le Rungrado à Pyongyang peut accueillir 114 000 spectateurs. Il est utilisé pour les défilés d'État nord-coréens."},
+{cat:"⚽ Sport",q:"Quel pays a inventé le base-ball ?",a:["États-Unis","Canada","Cuba","Japon"],tip:"Codifié aux États-Unis en 1845 par Alexander Cartwright. C'est la 'ligue nationale' des États-Unis — le sport est une véritable religion là-bas."},
+{cat:"⚽ Sport",q:"Quel Français est champion du monde de football en 1998 ET en 2018 ?",a:["Didier Deschamps","Zinedine Zidane","Thierry Henry","Lilian Thuram"],tip:"Didier Deschamps est capitaine en 1998 et sélectionneur en 2018 — le seul homme à avoir remporté la Coupe du Monde à ces deux postes."},
+{cat:"⚽ Sport",q:"Quel est le terme pour un score nul au tennis ?",a:["Égalité","Deuce","Set","Tie-break"],tip:"Quand les deux joueurs sont à 40-40, on dit 'Deuce' (à deux). Il faut ensuite deux points d'écart pour gagner le jeu."},
+{cat:"⚽ Sport",q:"Combien de disciplines composent le décathlon ?",a:["10","7","12","8"],tip:"100m, longueur, poids, hauteur, 400m, 110m haies, disque, perche, javelot, 1500m. C'est l'épreuve 'du plus complet des athlètes'."},
+{cat:"⚽ Sport",q:"Quel Français a remporté le plus de titres en Formule 1 ?",a:["Alain Prost","Patrick Tambay","René Arnoux","Jean Alesi"],tip:"Alain Prost remporte 4 titres mondiaux (1985, 86, 89, 93). Surnommé 'Le Professeur' pour sa conduite analytique."},
+{cat:"⚽ Sport",q:"Quel est le nom du trophée de la Coupe du Monde de football ?",a:["Trophée FIFA","Coupe Jules Rimet","Ballon d'Or","Golden Boot"],tip:"Le trophée actuel s'appelle simplement 'Trophée de la Coupe du Monde FIFA'. L'ancien trophée (Jules Rimet) a été volé au Brésil en 1983."},
+{cat:"⚽ Sport",q:"Dans quel sport parle-t-on de 'touché, coulé' ?",a:["Bataille navale (jeu stratégique)","Escrime","Voile de compétition","Planche à voile"],tip:"Ce sont les termes de la bataille navale. En escrime, on dit 'touché'. En pétanque, on 'couche' le cochonnet."},
+{cat:"⚽ Sport",q:"À quelle distance se trouve le penalty au football ?",a:["11 mètres","12 mètres","10 mètres","9 mètres"],tip:"Le point de penalty est à 11 mètres du but. Introduit en 1891, il permet de sanctionner les fautes dans la surface de réparation."},
+{cat:"⚽ Sport",q:"Quel pays a le plus de médailles olympiques cumulées dans l'histoire ?",a:["États-Unis","URSS/Russie","Chine","Allemagne"],tip:"Les États-Unis dominent le tableau avec plus de 2 600 médailles depuis 1896. Aux JO d'été, ils n'ont raté aucune édition sauf 1980 (boycott)."},
+{cat:"⚽ Sport",q:"Quel est le terme pour 3 buts consécutifs marqués par le même joueur ?",a:["Hat-trick","Triple couronne","Triplé parfait","Poker"],tip:"Le hat-trick vient du cricket : un bowler qui prenait 3 wickets consécutifs recevait un chapeau (hat) en récompense."},
+{cat:"⚽ Sport",q:"En quelle année les Jeux Olympiques modernes ont-ils été créés ?",a:["1896","1900","1888","1904"],tip:"Pierre de Coubertin relance les JO à Athènes en 1896. 14 nations participent. Les JO antiques datent de 776 av. J.-C."},
+{cat:"⚽ Sport",q:"Quel athlète détient le record du monde du 100m ?",a:["Usain Bolt","Asafa Powell","Yohan Blake","Tyson Gay"],tip:"Bolt court le 100m en 9.58 secondes aux Mondiaux 2009 de Berlin. Il court en moyenne 10,44 m/s — soit 37,6 km/h."},
+{cat:"⚽ Sport",q:"Quel sport se pratique sur un tatami ?",a:["Judo","Tennis de table","Boxe","Lutte libre"],tip:"Le tatami est un tapis de judo. En japonais, tatami désigne aussi les nattes traditionnelles des maisons japonaises."},
 
-  // CINÉMA
-  { cat:"🎬 Cinéma", q:"Qui a réalisé le film 'Titanic' (1997) ?", a:["James Cameron","Steven Spielberg","Peter Jackson","Ridley Scott"], correct:0, tip:"Émilien : James Cameron a aussi réalisé Avatar — deux des films les plus rentables de l'histoire !" },
-  { cat:"🎬 Cinéma", q:"Dans quelle saga apparaît le personnage de 'Frodon Sacquet' ?", a:["Le Seigneur des Anneaux","Harry Potter","Narnia","Eragon"], correct:0, tip:"Émilien : Frodon est le porteur de l'Anneau Unique dans l'œuvre de Tolkien !" },
-  { cat:"🎬 Cinéma", q:"Quel acteur joue Iron Man dans les films Marvel ?", a:["Robert Downey Jr.","Chris Evans","Mark Ruffalo","Chris Hemsworth"], correct:0, tip:"Émilien : Robert Downey Jr. a joué Iron Man de 2008 à 2019 — un rôle qui a relancé sa carrière !" },
+// ── CINÉMA & TV ──
+{cat:"🎬 Cinéma",q:"Qui a réalisé 'Titanic' et 'Avatar' ?",a:["James Cameron","Steven Spielberg","Peter Jackson","Christopher Nolan"],tip:"Cameron tourne Titanic (1997) et Avatar (2009), deux films qui dominent tour à tour le box-office mondial. Il est aussi un explorateur des grands fonds marins."},
+{cat:"🎬 Cinéma",q:"Qui a inventé le cinéma ?",a:["Les frères Lumière","Thomas Edison","Georges Méliès","Charles Pathé"],tip:"Les frères Lumière organisent la première projection publique payante le 28 décembre 1895 à Paris. Edison filme mais ne projette pas en public."},
+{cat:"🎬 Cinéma",q:"Qui joue Neo dans 'Matrix' ?",a:["Keanu Reeves","Brad Pitt","Tom Cruise","Johnny Depp"],tip:"Keanu Reeves fait toutes ses cascades lui-même. Will Smith refuse le rôle de Neo — il tourne Men in Black à la place."},
+{cat:"🎬 Cinéma",q:"Quel acteur joue Forrest Gump ?",a:["Tom Hanks","Dustin Hoffman","Robin Williams","Kevin Costner"],tip:"Tom Hanks remporte 2 Oscars consécutifs (Philadelphia + Forrest Gump) — seul acteur avec Spencer Tracy à réussir cela."},
+{cat:"🎬 Cinéma",q:"Quel film Pixar met en scène un rat cuisinier à Paris ?",a:["Ratatouille","Là-haut","Coco","L'Incroyable Famille Incredibles"],tip:"Ratatouille (2007) de Brad Bird est filmé au niveau du sol pour voir Paris du point de vue d'un rat. L'équipe voyage à Paris pour s'inspirer."},
+{cat:"🎬 Cinéma",q:"Qui réalise la saga Indiana Jones ?",a:["Steven Spielberg","George Lucas","Ron Howard","Francis Ford Coppola"],tip:"Spielberg et Lucas créent Indiana Jones ensemble. Harrison Ford est choisi après que Tom Selleck refuse le rôle pour rester dans Magnum."},
+{cat:"🎬 Cinéma",q:"Quel est le film le plus rentable de l'histoire (recettes mondiales) ?",a:["Avatar (2009)","Avengers: Endgame","Titanic","Star Wars"],tip:"Avatar (2009) dépasse 2,9 milliards de dollars — record battu brièvement par Avengers: Endgame, puis repris par Avatar en 2022."},
+{cat:"🎬 Cinéma",q:"Qui joue le Joker dans 'Le Chevalier Noir' (2008) ?",a:["Heath Ledger","Jack Nicholson","Joaquin Phoenix","Jared Leto"],tip:"Heath Ledger remporte l'Oscar à titre posthume — il meurt d'une overdose accidentelle avant la sortie du film."},
+{cat:"🎬 Cinéma",q:"Quel réalisateur a créé Psychose et Les Oiseaux ?",a:["Alfred Hitchcock","Stanley Kubrick","Orson Welles","Billy Wilder"],tip:"Hitchcock, le maître du suspense, apparaît en cameo dans presque tous ses films. Psychose (1960) révolutionne le genre du thriller."},
+{cat:"🎬 Cinéma",q:"Qui joue Jack Sparrow dans Pirates des Caraïbes ?",a:["Johnny Depp","Orlando Bloom","Keira Knightley","Geoffrey Rush"],tip:"Depp s'inspire de Keith Richards (Rolling Stones) et d'une rock star pour créer le personnage de Jack Sparrow — Disney déteste la performance à la première vision."},
+{cat:"🎬 Cinéma",q:"Quel film lance la carrière de Spielberg en 1975 ?",a:["Les Dents de la mer","E.T.","Rencontres du Troisième Type","1941"],tip:"Les Dents de la mer (Jaws) invente le concept du blockbuster d'été. Le requin mécanique tombe si souvent en panne que Spielberg improvise — et le film en est meilleur."},
+{cat:"🎬 Cinéma",q:"Dans quelle saga entend-on 'Que la Force soit avec toi' ?",a:["Star Wars","Dune","Avatar","Le Seigneur des Anneaux"],tip:"Star Wars (1977) de George Lucas change l'industrie du cinéma. Les effets spéciaux sont si innovants qu'ils donnent naissance à Industrial Light & Magic (ILM)."},
+{cat:"🎬 Cinéma",q:"Qui joue Hermione Granger dans Harry Potter ?",a:["Emma Watson","Emma Stone","Keira Knightley","Natalie Portman"],tip:"Emma Watson est choisie à 9 ans. Pendant le tournage, elle mémorise non seulement ses répliques mais aussi celles de tous les autres acteurs."},
+{cat:"🎬 Cinéma",q:"Quel acteur français joue Léon dans le film de Luc Besson (1994) ?",a:["Jean Reno","Vincent Cassel","Gérard Depardieu","Thierry Lhermitte"],tip:"Jean Reno (né Juan Moreno en 1948) est d'origine espagnole. Léon le Professionnel est considéré comme l'un des meilleurs films français."},
+{cat:"🎬 Cinéma",q:"Quel personnage de Disney est un éléphant aux grandes oreilles ?",a:["Dumbo","Babar","Éléphant dans Jungle Book","Tantor"],tip:"Dumbo (1941) est le 4e film d'animation Disney. Il dure seulement 64 minutes — le plus court long métrage Disney."},
+{cat:"🎬 Cinéma",q:"Dans quel film Charlot est-il le personnage principal ?",a:["Les Temps modernes","Metropolis","Nosferatu","Le Cabinet du Dr. Caligari"],tip:"Charlot (le clochard) est le personnage emblématique de Charlie Chaplin depuis 1914. Les Temps modernes (1936) critique déjà le travail à la chaîne."},
+{cat:"🎬 Cinéma",q:"Quel film de Christopher Nolan joue avec le rêve dans le rêve ?",a:["Inception","Interstellar","Memento","Tenet"],tip:"Inception (2010) avec Leonardo DiCaprio. La toupie qui tourne à la fin a alimenté des milliers de débats — Nolan dit que la réponse est dans le film."},
+{cat:"🎬 Cinéma",q:"Quel film Disney parle d'un roi lion qui doit reprendre son royaume ?",a:["Le Roi Lion","Tarzan","Jungle Book","Bambi"],tip:"Le Roi Lion (1994) s'inspire de Hamlet de Shakespeare. La chanson 'Hakuna Matata' signifie 'pas de problème' en swahili."},
+{cat:"🎬 Cinéma",q:"Quel réalisateur a fait 'Schindler's List' et 'E.T.' ?",a:["Spielberg","Coppola","Scorsese","De Palma"],tip:"Spielberg réalise Schindler's List (1993) en noir et blanc pour respecter la mémoire des victimes. Il donne tout l'argent à la Shoah Foundation."},
+{cat:"🎬 Cinéma",q:"Qui joue James Bond dans la trilogie 'Casino Royale, Quantum of Solace, Skyfall' ?",a:["Daniel Craig","Pierce Brosnan","Roger Moore","Timothy Dalton"],tip:"Daniel Craig (2006-2021) est le 6e Bond. Il est sélectionné contre l'avis du public — les fans protestent à l'annonce. Il finira par être le Bond préféré de beaucoup."},
+{cat:"🎬 Cinéma",q:"Quel film d'animation français a reçu l'Oscar du meilleur film étranger en 2012 ?",a:["The Artist","Persepolis","Intouchables","La Vie d'Adèle"],tip:"The Artist de Michel Hazanavicius est un film muet en noir et blanc en 2011 — une audace récompensée par 5 Oscars dont celui du meilleur film."},
+{cat:"🎬 Cinéma",q:"Quel pays produit le plus de films par an (industrie dite 'Bollywood') ?",a:["Inde","États-Unis","Chine","Nigéria"],tip:"L'Inde produit plus de 1 800 films par an — 2x plus que Hollywood. 'Bollywood' désigne spécifiquement l'industrie hindi de Mumbai."},
+{cat:"🎬 Cinéma",q:"Dans quel film entend-on 'Je serai de retour' (I'll be back) ?",a:["Terminator","RoboCop","Predator","Total Recall"],tip:"Arnold Schwarzenegger prononce cette réplique en 1984 dans Terminator. C'est la réplique de film la plus parodiée de l'histoire du cinéma."},
+{cat:"🎬 Cinéma",q:"Quel film de Stanley Kubrick se passe dans l'espace et est sorti en 1968 ?",a:["2001: l'Odyssée de l'espace","Full Metal Jacket","Eyes Wide Shut","Shining"],tip:"Kubrick consulte plus de 65 entreprises pour des effets spéciaux réalistes. La NASA dit que c'est le film le plus fidèle à la réalité spatiale."},
+{cat:"🎬 Cinéma",q:"Quel acteur joue Spider-Man dans la trilogie originale de Sam Raimi ?",a:["Tobey Maguire","Andrew Garfield","Tom Holland","Ben Affleck"],tip:"Tobey Maguire est choisi pour sa fragilité. La scène de la pluie dans Spider-Man 2 lui vaut d'être comparé à Gene Kelly dans Singin' in the Rain."},
+{cat:"🎬 Cinéma",q:"Quel film d'animation Pixar parle d'une vieille maison qui s'envole avec des ballons ?",a:["Là-haut","Cars","Toy Story","Monstres et Cie"],tip:"Là-haut (Up, 2009) est le premier film d'animation à ouvrir le Festival de Cannes. Les 10 premières minutes sans dialogue font pleurer le monde entier."},
+{cat:"🎬 Cinéma",q:"Qui joue Hannibal Lecter dans 'Le Silence des agneaux' (1991) ?",a:["Anthony Hopkins","Gary Oldman","Michael Douglas","Jack Nicholson"],tip:"Hopkins joue Hannibal seulement 16 minutes sur les 118 du film — mais remporte l'Oscar du meilleur acteur. C'est l'un des rôles les plus courts à avoir gagné cet Oscar."},
+{cat:"🎬 Cinéma",q:"Quel film de Francis Ford Coppola est basé sur le roman de Mario Puzo ?",a:["Le Parrain","Apocalypse Now","Conversation secrète","Dracula de Bram Stoker"],tip:"Le Parrain (1972) reçoit l'Oscar du meilleur film. La phrase 'Je vais lui faire une offre qu'il ne pourra pas refuser' est élue meilleure réplique de l'histoire du cinéma."},
+{cat:"🎬 Cinéma",q:"Quelle actrice joue Katniss Everdeen dans 'Hunger Games' ?",a:["Jennifer Lawrence","Kristen Stewart","Emma Watson","Shailene Woodley"],tip:"Jennifer Lawrence remporte l'Oscar de la meilleure actrice à 22 ans pour Silver Linings Playbook — la 2e plus jeune lauréate de l'histoire."},
+{cat:"🎬 Cinéma",q:"Dans quel film entend-on 'On va avoir besoin d'un plus grand bateau' ?",a:["Les Dents de la mer","Aquaman","The Abyss","Waterworld"],tip:"Roy Scheider improvise cette réplique devant le requin mécanique. Elle est élue l'une des meilleures répliques de l'histoire du cinéma."},
 
-  // GASTRONOMIE
-  { cat:"🍽️ Gastronomie", q:"De quel pays est originaire la pizza ?", a:["Italie","Grèce","France","Espagne"], correct:0, tip:"Émilien : La pizza Margherita est née à Naples au XIXe siècle — ses couleurs représentent le drapeau italien !" },
-  { cat:"🍽️ Gastronomie", q:"Qu'est-ce que la 'baguette' en France ?", a:["Un pain long et croustillant","Une pâtisserie sucrée","Un gâteau au chocolat","Un fromage"], correct:0, tip:"Émilien : La baguette française est inscrite au patrimoine immatériel de l'UNESCO depuis 2022 !" },
+// ── ANIMAUX ──
+{cat:"🦁 Animaux",q:"Quel est l'animal terrestre le plus rapide ?",a:["Guépard","Lion","Antilope","Cheval"],tip:"Le guépard atteint 112 km/h en sprints de 20-30 secondes. Après 3 chasses, il est épuisé. Il ne rugit pas — il ronronne comme un chat !"},
+{cat:"🦁 Animaux",q:"Combien de cœurs possède un poulpe ?",a:["3","1","2","4"],tip:"Un cœur systémique pompe le sang vers le corps, deux cœurs branchiaux vers les branchies. Son sang est bleu (hémocyanine au cuivre, pas à fer)."},
+{cat:"🦁 Animaux",q:"Quel est le plus grand animal de la planète ?",a:["Baleine bleue","Éléphant de mer","Grand requin blanc","Cachalot"],tip:"La baleine bleue peut atteindre 33 mètres et 190 tonnes. C'est l'animal le plus grand ayant jamais existé — plus grand que les dinosaures."},
+{cat:"🦁 Animaux",q:"Quel est le seul mammifère qui pond des œufs ?",a:["L'ornithorynque","L'échidné","La chauve-souris","Le pangolin"],tip:"L'ornithorynque est si étrange que les premiers scientifiques qui en virent un pensèrent à un canular. Il a un bec de canard, une queue de castor et des pattes de loutre."},
+{cat:"🦁 Animaux",q:"Combien de pattes possède une araignée ?",a:["8","6","10","12"],tip:"Les araignées ont 8 pattes, les insectes en ont 6. Ce détail permet de les distinguer facilement. Les araignées appartiennent à la classe des arachnides."},
+{cat:"🦁 Animaux",q:"Quel oiseau ne peut pas voler mais court très vite ?",a:["Autruche","Manchot","Kiwi","Casoar"],tip:"L'autruche court à 70 km/h en vitesse de pointe. C'est l'oiseau le plus rapide sur terre et le plus grand vivant aujourd'hui."},
+{cat:"🦁 Animaux",q:"Quel animal a une gestation d'environ 22 mois ?",a:["Éléphant d'Afrique","Rhinocéros","Girafe","Hippopotame"],tip:"22 mois, presque 2 ans ! C'est la gestation la plus longue chez les mammifères terrestres. Le bébé pèse 100 kg à la naissance."},
+{cat:"🦁 Animaux",q:"Quel oiseau effectue la migration la plus longue ?",a:["Sterne arctique","Hirondelle","Albatros","Coucou"],tip:"La sterne arctique migre de l'Arctique vers l'Antarctique et retour chaque année — 90 000 km. Elle voit 2 étés par an."},
+{cat:"🦁 Animaux",q:"Quel primate partage le plus de gènes avec l'humain ?",a:["Chimpanzé","Gorille","Orang-outan","Bonobo"],tip:"Le chimpanzé partage 98,7 % de notre ADN. Le bonobo est aussi proche. Pourtant, nous différons énormément en comportement et en capacité langagière."},
+{cat:"🦁 Animaux",q:"Quel est le reptile le plus grand du monde ?",a:["Crocodile marin","Anaconda","Varan de Komodo","Python réticulé"],tip:"Le crocodile marin (estuarien) peut dépasser 6 mètres et 1 000 kg. Il vit en Asie du Sud-Est et en Australie."},
+{cat:"🦁 Animaux",q:"Quel animal produit la soie ?",a:["Ver à soie","Araignée","Cochenille","Bombyx"],tip:"Le bombyx du mûrier (ver à soie) est sa chenille. Un seul cocon peut donner 1 000 à 1 500 mètres de fil de soie continu."},
+{cat:"🦁 Animaux",q:"Quel animal peut changer de couleur pour se camoufler ?",a:["Caméléon","Pieuvre","Seiche","Les trois"],tip:"Les trois changent de couleur, mais pour des raisons différentes. Le caméléon régule sa température et communique — pas seulement pour le camouflage !"},
+{cat:"🦁 Animaux",q:"Quel est l'animal le plus venimeux au monde ?",a:["Méduse boîte","Cobra royal","Mamba noir","Pieuvre à anneaux bleus"],tip:"La méduse boîte (Chironex fleckeri) peut tuer un adulte en 2 minutes. Elle a 24 yeux — certains avec une pupille, un cristallin et une rétine."},
+{cat:"🦁 Animaux",q:"Combien de dents possède un escargot environ ?",a:["14 000","200","500","80"],tip:"Les 'dents' de l'escargot sont des rangées de denticules sur sa radula (langue râpeuse). Une sorte de brosse à dents avec 14 000 crochets !"},
+{cat:"🦁 Animaux",q:"Quel animal symbolise traditionnellement la paix ?",a:["La colombe","L'aigle","L'olivier","Le dauphin"],tip:"La colombe blanche avec un rameau d'olivier vient de la Bible — Noé la lâche pour trouver la terre ferme. Picasso en fera le symbole mondial de la paix."},
+{cat:"🦁 Animaux",q:"Quel est le plus grand mammifère terrestre ?",a:["Éléphant d'Afrique","Éléphant d'Asie","Rhinocéros blanc","Hippopotame"],tip:"L'éléphant d'Afrique peut peser 7 tonnes. Ses oreilles géantes lui servent de radiateur — elles refroidissent son sang."},
+{cat:"🦁 Animaux",q:"Quel est l'animal vivant le plus longtemps ?",a:["Quahog océanique","Tortue des Galapagos","Baleine boréale","Méduse immortelle"],tip:"Une palourde (quahog) nommée 'Ming' a vécu 507 ans — découverte en 2006. Mais la méduse Turritopsis dohrnii est techniquement immortelle car elle peut se régénérer."},
+{cat:"🦁 Animaux",q:"Pourquoi les flamants roses sont-ils roses ?",a:["À cause des crustacés qu'ils mangent","C'est leur couleur naturelle","À cause du soleil","À cause de l'eau"],tip:"Ils naissent blancs ! Les pigments des crevettes et algues (caroténoïdes) qu'ils mangent colorent leurs plumes en rose. En captivité, on doit les nourrir avec des additifs."},
+{cat:"🦁 Animaux",q:"Quel mammifère est le seul capable de voler ?",a:["La chauve-souris","L'écureuil volant","Le colugo","Le sucrier"],tip:"L'écureuil volant plane, mais seule la chauve-souris vole vraiment. Elle représente 20 % de toutes les espèces de mammifères sur Terre."},
+{cat:"🦁 Animaux",q:"Combien de pattes possède un insecte ?",a:["6","8","10","4"],tip:"6 pattes est LE critère définissant un insecte. Une araignée a 8 pattes → arachnide. Un crabe a 10 pattes → crustacé."},
+{cat:"🦁 Animaux",q:"Quelle est la durée de vie d'une ouvrière abeille en été ?",a:["6 semaines","1 an","6 mois","2 semaines"],tip:"En été, l'abeille ouvrière travaille tellement dur qu'elle s'use en 6 semaines. En hiver, les abeilles vivent jusqu'à 6 mois en activité réduite."},
+{cat:"🦁 Animaux",q:"Quel requin est le plus grand du monde ?",a:["Requin baleine","Grand requin blanc","Requin renard","Requin pèlerin"],tip:"Le requin baleine peut atteindre 12 mètres et 20 tonnes. Contrairement à son nom, il se nourrit de plancton — complètement inoffensif pour l'homme."},
+{cat:"🦁 Animaux",q:"Quel animal produit le miel ?",a:["Abeille","Guêpe","Frelon","Bourdon"],tip:"Une abeille produit 1/12 de cuillère à café de miel dans sa vie. La ruche entière produit environ 50 kg de miel par an."},
+{cat:"🦁 Animaux",q:"Quelle est la caractéristique unique de l'ornithorynque mâle ?",a:["Il est venimeux","Il pond des œufs","Il a un bec rétractable","Il change de sexe"],tip:"Le mâle a un éperon venimeux sur la patte arrière. Il libère un venin qui peut tuer un chien ou causer une douleur extrême chez l'humain."},
+{cat:"🦁 Animaux",q:"Quel animal donne naissance aux petits les plus petits par rapport à sa taille ?",a:["Kangourou","Opossum","Koala","Wombat"],tip:"Le bébé kangourou à la naissance mesure 2 cm (taille d'un haricot) pour une mère de 60 kg. Il rampe seul jusqu'à la poche."},
+{cat:"🦁 Animaux",q:"Combien de cœurs (arcs aortiques) possède un ver de terre ?",a:["5","1","3","10"],tip:"Le ver de terre a 5 paires d'arcs aortiques qui fonctionnent comme des cœurs. Il peut sentir la lumière même sans yeux."},
+{cat:"🦁 Animaux",q:"Quel oiseau peut dormir en volant ?",a:["Martinet noir","Albatros","Frégate","Hirondelle"],tip:"Le martinet noir passe 10 mois en l'air sans jamais se poser ! Il mange, dort et s'accouple en vol. Ses pattes atrophiées ne lui permettent pas de se relever si il tombe."},
+{cat:"🦁 Animaux",q:"Quel est l'insecte le plus répandu sur Terre ?",a:["Fourmi","Moustique","Coléoptère","Termite"],tip:"Les fourmis représentent à elles seules 20 % de la biomasse animale terrestre. Il y aurait 20 000 milliards de fourmis sur Terre — 2,5 millions par humain."},
 
-  // ANIMAUX
-  { cat:"🦁 Animaux", q:"Quel est l'animal le plus rapide du monde ?", a:["Le guépard","Le faucon pèlerin","Le lion","Le lièvre"], correct:0, tip:"Émilien : Le guépard atteint 110 km/h, mais le faucon pèlerin dépasse 390 km/h en piqué — tout dépend si on compte l'air !" },
-  { cat:"🦁 Animaux", q:"Combien de cœurs possède un poulpe ?", a:["3","1","2","4"], correct:0, tip:"Émilien : 3 cœurs — un principal et deux branchiaux pour pomper le sang vers les branchies !" },
-  { cat:"🦁 Animaux", q:"Quel est le plus grand mammifère terrestre ?", a:["L'éléphant d'Afrique","La girafe","Le rhinocéros","L'hippopotame"], correct:0, tip:"Émilien : L'éléphant d'Afrique peut peser jusqu'à 7 tonnes — 3x plus qu'une voiture !" },
+// ── ART & ARCHITECTURE ──
+{cat:"🎨 Art & Architecture",q:"Qui a peint la Joconde ?",a:["Léonard de Vinci","Michel-Ange","Raphaël","Botticelli"],tip:"De Vinci commence la Joconde vers 1503 et ne la finit jamais vraiment. Il l'emporte avec lui et elle reste en France — c'est François Ier qui l'achète."},
+{cat:"🎨 Art & Architecture",q:"Qui a peint la Chapelle Sixtine ?",a:["Michel-Ange","Raphaël","Botticelli","Perugino"],tip:"Michel-Ange peint les 520 m² de la Chapelle Sixtine de 1508 à 1512. Il travaille debout, penché en arrière — pas allongé, contrairement à la légende."},
+{cat:"🎨 Art & Architecture",q:"Quel peintre a coupé son oreille ?",a:["Van Gogh","Gauguin","Picasso","Monet"],tip:"Van Gogh se coupe une partie de l'oreille gauche en 1888 après une dispute avec Gauguin. Il envoie le morceau à une femme d'un bordel voisin."},
+{cat:"🎨 Art & Architecture",q:"Qui a dessiné la Sagrada Família à Barcelone ?",a:["Antoni Gaudí","Santiago Calatrava","Norman Foster","Zaha Hadid"],tip:"Gaudí consacre les 43 dernières années de sa vie à ce monument. Il meurt en 1926 renversé par un tramway. La basilique n'est toujours pas achevée."},
+{cat:"🎨 Art & Architecture",q:"Quel musée est le plus visité au monde ?",a:["Le Louvre","Le Metropolitan Museum","Le British Museum","Le Vatican"],tip:"Le Louvre accueille environ 9 millions de visiteurs par an. Construit comme forteresse en 1190, il devient musée en 1793 après la Révolution."},
+{cat:"🎨 Art & Architecture",q:"Qui a peint 'Guernica' ?",a:["Picasso","Dalí","Miró","Matisse"],tip:"Guernica (1937) dénonce le bombardement de la ville basque par l'aviation nazie. Picasso interdit son retour en Espagne tant que Franco sera au pouvoir."},
+{cat:"🎨 Art & Architecture",q:"À quel mouvement appartient la 'Persistance de la mémoire' (montres molles) ?",a:["Surréalisme","Cubisme","Dadaïsme","Expressionnisme"],tip:"Salvador Dalí peint cette toile en 1931. Selon lui, l'idée lui vient en regardant du camembert fondre au soleil."},
+{cat:"🎨 Art & Architecture",q:"Qui a sculpté 'Le Penseur' ?",a:["Rodin","Brancusi","Bernini","Giacometti"],tip:"Rodin crée Le Penseur en 1880. Il représente à l'origine Dante devant les portes de l'enfer. Des copies existent dans 28 musées du monde."},
+{cat:"🎨 Art & Architecture",q:"Quel architecte a dessiné la pyramide du Louvre ?",a:["I.M. Pei","Renzo Piano","Frank Gehry","Tadao Ando"],tip:"I.M. Pei (Ieoh Ming Pei) inaugure sa pyramide en 1989. À la commande, 90 % des Parisiens sont contre ce projet — aujourd'hui, c'est devenu une icône."},
+{cat:"🎨 Art & Architecture",q:"Claude Monet est surtout connu pour quelle série de peintures ?",a:["Les Nymphéas","Les Tournesols","Les Nénuphars","Les Iris"],tip:"Monet peint 250 toiles de Nymphéas dans son jardin de Giverny. Ses yeux malades lui donnent une vision brumeuse — ce qui renforce son style impressionniste."},
+{cat:"🎨 Art & Architecture",q:"Quel mouvement artistique Picasso fonde-t-il avec Braque ?",a:["Cubisme","Surréalisme","Fauvisme","Expressionnisme"],tip:"Le cubisme (1907-1914) représente les objets sous plusieurs angles simultanément. Les Demoiselles d'Avignon (1907) est considéré comme le premier tableau cubiste."},
+{cat:"🎨 Art & Architecture",q:"Qui a peint 'La Liberté guidant le peuple' ?",a:["Delacroix","David","Géricault","Ingres"],tip:"Delacroix peint ce tableau en 1830 pour commémorer les Trois Glorieuses. La femme au bonnet phrygien incarne la France révolutionnaire."},
+{cat:"🎨 Art & Architecture",q:"Dans quel style architectural est construite Notre-Dame de Paris ?",a:["Gothique","Roman","Baroque","Renaissance"],tip:"Gothique, avec ses arcs-boutants inventés pour alléger les murs et percer de grandes fenêtres. Notre-Dame est construite de 1163 à 1345."},
+{cat:"🎨 Art & Architecture",q:"Qui a conçu le Centre Pompidou à Paris ?",a:["Renzo Piano et Richard Rogers","I.M. Pei","Le Corbusier","Oscar Niemeyer"],tip:"Inauguré en 1977, Pompidou choque Paris avec ses tuyaux colorés à l'extérieur. Les architectes ont mis les 'entrailles' du bâtiment dehors — délibérément."},
+{cat:"🎨 Art & Architecture",q:"Qui a peint 'Le Déjeuner sur l'herbe' en 1863 ?",a:["Édouard Manet","Claude Monet","Auguste Renoir","Edgar Degas"],tip:"Le tableau de Manet scandalise : une femme nue avec des hommes habillés. Il est refusé au Salon officiel mais exposé au 'Salon des Refusés' — créé pour l'occasion."},
+{cat:"🎨 Art & Architecture",q:"Quelle est la ville où est né Léonard de Vinci ?",a:["Vinci (Toscane)","Florence","Milan","Rome"],tip:"Né en 1452 à Vinci, il est l'enfant illégitime d'un notaire. Ses carnets contiennent des plans d'hélicoptère, de char d'assaut et de machine à voler — au XVe siècle."},
+{cat:"🎨 Art & Architecture",q:"Où se trouve la Pietà de Michel-Ange ?",a:["Basilique Saint-Pierre (Vatican)","Musée du Vatican","Galerie des Offices","Louvre"],tip:"Michel-Ange sculpte la Pietà à 24 ans — c'est la seule œuvre qu'il a jamais signée. Il grave son nom en diagonale sur l'écharpe de la Vierge."},
+{cat:"🎨 Art & Architecture",q:"Quelle tapisserie du XIe siècle raconte la conquête de l'Angleterre ?",a:["Tapisserie de Bayeux","Tapisserie de La Chaise-Dieu","Tapisserie d'Angers","Tapisserie de Tournai"],tip:"La Tapisserie de Bayeux (1070-1080) fait 70 mètres de long. Elle raconte la conquête normande de l'Angleterre en 58 scènes — comme une BD médiévale."},
+{cat:"🎨 Art & Architecture",q:"Dans quel quartier de Paris se trouve la Basilique du Sacré-Cœur ?",a:["Montmartre","Marais","Bastille","Belleville"],tip:"Montmartre était autrefois un village de vignerons hors de Paris. Au XIXe siècle, c'est le quartier des artistes — Picasso, Modigliani, Utrillo y vivent."},
+{cat:"🎨 Art & Architecture",q:"Qui dessine la Statue de la Liberté ?",a:["Bartholdi","Eiffel","Viollet-le-Duc","Haussmann"],tip:"Frédéric Auguste Bartholdi sculpte la statue, Gustave Eiffel conçoit la structure intérieure. C'est un cadeau de la France aux États-Unis, inauguré en 1886."},
+{cat:"🎨 Art & Architecture",q:"À quel mouvement artistique appartient Kandinsky ?",a:["Art abstrait / Bauhaus","Impressionnisme","Cubisme","Surréalisme"],tip:"Kandinsky (1866-1944) est l'un des pères de l'art abstrait. Il cofonde le Bauhaus avec Paul Klee. Il perçoit les couleurs comme des sons — synesthésie."},
+{cat:"🎨 Art & Architecture",q:"Quel architecte espagnol est célèbre pour ses bâtiments organiques à Barcelone ?",a:["Antoni Gaudí","Santiago Calatrava","Rafael Moneo","Ricardo Bofill"],tip:"Gaudí s'inspire de la nature : ses colonnes ressemblent à des arbres, ses toits à des carapaces. Il dit : 'L'architecte original c'est Dieu.'"},
+{cat:"🎨 Art & Architecture",q:"Qui a peint 'Les Tournesols' ?",a:["Van Gogh","Gauguin","Renoir","Seurat"],tip:"Van Gogh peint plusieurs séries de Tournesols pour décorer la chambre de Gauguin. Une toile (sur 7) est estimée à plus de 80 millions de dollars aujourd'hui."},
+{cat:"🎨 Art & Architecture",q:"Pour quelle exposition est construite la Tour Eiffel ?",a:["L'Exposition universelle de 1889","Les JO de 1900","Le Centenaire de la Révolution","L'Expo coloniale de 1900"],tip:"La Tour Eiffel célèbre le centenaire de la Révolution française ET l'Exposition universelle de 1889. Eiffel la construit en 2 ans, 2 mois et 5 jours avec 300 ouvriers."},
+{cat:"🎨 Art & Architecture",q:"Dans quel pays se trouve le Colisée ?",a:["Italie","Grèce","Turquie","Croatie"],tip:"Le Colisée de Rome (Flavian Amphitheatre) peut accueillir 50 000 spectateurs. Construit en 70-80 apr. J.-C., il possédait un velum (toit rétractable en toile)."},
+{cat:"🎨 Art & Architecture",q:"Quel peintre impressionniste est connu pour ses danseuses ?",a:["Edgar Degas","Auguste Renoir","Berthe Morisot","Camille Pissarro"],tip:"Degas représente les danseuses de l'Opéra de Paris dans des milliers de tableaux et sculptures. Paradoxalement, il n'aimait pas vraiment la danse — il aimait le mouvement et la lumière."},
+{cat:"🎨 Art & Architecture",q:"Qui a peint 'La Nuit étoilée' ?",a:["Van Gogh","Monet","Renoir","Cézanne"],tip:"Van Gogh peint La Nuit étoilée en 1889 depuis la fenêtre de sa chambre à l'asile de Saint-Rémy-de-Provence. Il vend un seul tableau de son vivant."},
+{cat:"🎨 Art & Architecture",q:"Quel bâtiment est le plus grand palais du monde (superficie) ?",a:["Cité Interdite (Pékin)","Versailles","Buckingham Palace","Vatican"],tip:"La Cité Interdite couvre 72 hectares avec 980 bâtiments et 9 000 pièces. Elle fut la résidence des empereurs chinois pendant 500 ans."},
+{cat:"🎨 Art & Architecture",q:"Dans quel mouvement artistique range-t-on les artistes Botticelli, Raphaël et Michel-Ange ?",a:["Renaissance","Baroque","Classicisme","Maniérisme"],tip:"La Renaissance italienne (XVe-XVIe s.) redécouvre l'Antiquité greco-romaine. Elle naît à Florence, financée par les Médicis."},
+{cat:"🎨 Art & Architecture",q:"Qui construit le Palais de Versailles tel qu'on le connaît aujourd'hui ?",a:["Louis XIV","Louis XIII","Louis XV","Henri IV"],tip:"Louis XIII construit un pavillon de chasse. Louis XIV le transforme en palais immense à partir de 1661 — pour éloigner la noblesse de Paris et la contrôler."},
+
+// ── CURIOSITÉS ──
+{cat:"💡 Curiosités",q:"Combien de langues sont parlées dans le monde environ ?",a:["7 000","3 000","10 000","1 500"],tip:"On recense environ 7 000 langues. La moitié est menacée d'extinction — une langue meurt tous les 14 jours. 40 % des langues ont moins de 1 000 locuteurs."},
+{cat:"💡 Curiosités",q:"Quel pays a la plus haute densité de population au monde ?",a:["Monaco","Singapour","Bahreïn","Bangladesh"],tip:"Monaco : 26 000 habitants au km². Pour comparaison, la France a 122 habitants au km² et la Russie seulement 9."},
+{cat:"💡 Curiosités",q:"La Grande Muraille de Chine est-elle visible depuis l'espace ?",a:["Non","Oui","Seulement par temps clair","Avec un télescope"],tip:"C'est un mythe ! La Muraille est trop étroite (4 à 5 m) pour être vue de l'orbite à l'œil nu. Les astronautes chinois l'ont confirmé."},
+{cat:"💡 Curiosités",q:"Quel est le livre le plus vendu de l'histoire ?",a:["La Bible","Le Petit Livre Rouge","Harry Potter","Le Seigneur des Anneaux"],tip:"La Bible est traduite en plus de 700 langues et vendue à 5 milliards d'exemplaires. C'est le livre le plus distribué depuis l'invention de l'imprimerie."},
+{cat:"💡 Curiosités",q:"Quel pays consomme le plus de café par habitant ?",a:["Finlande","Italie","Brésil","États-Unis"],tip:"Les Finlandais boivent 12 kg de café par personne par an — soit 3 à 5 tasses par jour. La pause café y est protégée par la loi au travail."},
+{cat:"💡 Curiosités",q:"Combien de facettes possède un ballon de football traditionnel ?",a:["32","20","12","60"],tip:"32 faces : 20 hexagones blancs et 12 pentagones noirs. Ce design (icosaèdre tronqué) est identique à la molécule de Buckminsterfullerène (C60)."},
+{cat:"💡 Curiosités",q:"Quel est le seul mammifère terrestre qui ne peut pas sauter ?",a:["L'éléphant","Le rhinocéros","L'hippopotame","Le crocodile"],tip:"L'éléphant est trop lourd pour décoller — ses os sont trop denses pour absorber l'impact. Contrairement à la croyance, les éléphants nagent très bien."},
+{cat:"💡 Curiosités",q:"Dans quel pays le chocolat a-t-il été inventé ?",a:["Mexique","Belgique","Suisse","France"],tip:"Les Mayas et Aztèques consomment du cacao depuis 2 000 ans. Hernán Cortés ramène la recette en Europe en 1527 — mais sans sucre d'abord. C'était amer et pimenté."},
+{cat:"💡 Curiosités",q:"Combien de pays existent dans le monde (reconnus par l'ONU) ?",a:["195","193","197","180"],tip:"193 États membres de l'ONU + 2 États observateurs (Vatican et Palestine) = 195. Taïwan, Kosovo et d'autres territoires ont un statut contesté."},
+{cat:"💡 Curiosités",q:"Quel est le plus vieux restaurant encore en activité ?",a:["Sobrino de Botín (Madrid, 1725)","La Tour d'Argent (Paris)","Rules (Londres)","Stiftskeller St. Peter (Salzbourg)"],tip:"Le Sobrino de Botín à Madrid est dans le Guinness des records. Francisco Goya y aurait travaillé comme garçon de salle avant de devenir peintre."},
+{cat:"💡 Curiosités",q:"Combien de temps met la lumière pour aller du Soleil à la Terre ?",a:["8 minutes","1 seconde","1 heure","1 minute"],tip:"8 minutes et 20 secondes exactement. Cela signifie que nous voyons le Soleil tel qu'il était il y a 8 minutes — et l'étoile la plus proche il y a 4 ans."},
+{cat:"💡 Curiosités",q:"Quel est le mot le plus utilisé en anglais ?",a:["The","Is","I","And"],tip:"'The' représente 7 % de tous les mots anglais écrits. En français, le mot le plus fréquent est 'de'."},
+{cat:"💡 Curiosités",q:"Quel pays possède le plus de pyramides ?",a:["Soudan","Égypte","Mexique","Pérou"],tip:"Le Soudan (ancienne Nubie) possède entre 200 et 255 pyramides — plus que l'Égypte (environ 130). Les pyramides nubiennes sont plus hautes et étroites."},
+{cat:"💡 Curiosités",q:"Combien de pays l'Amazone traverse-t-elle ?",a:["9","3","5","12"],tip:"Le bassin amazonien couvre 9 pays : Brésil, Pérou, Colombie, Venezuela, Équateur, Bolivie, Guyana, Suriname, Guyane française."},
+{cat:"💡 Curiosités",q:"Quel pays a la plus grande forêt du monde ?",a:["Russie","Brésil","Canada","République Démocratique du Congo"],tip:"La taïga sibérienne couvre 9 millions de km² — plus grande que la forêt amazonienne. Elle contient 25 % des forêts mondiales."},
+{cat:"💡 Curiosités",q:"Combien pèse un nuage en moyenne ?",a:["500 tonnes","1 kg","1 tonne","50 kg"],tip:"Un cumulus moyen pèse environ 500 000 kg (500 tonnes). Il ne tombe pas car les gouttelettes d'eau (0,01 mm) sont si légères qu'elles flottent."},
+{cat:"💡 Curiosités",q:"Quelle est la langue la plus parlée au monde (locuteurs natifs) ?",a:["Mandarin","Espagnol","Anglais","Hindi"],tip:"Le mandarin a 920 millions de locuteurs natifs. Mais en nombre total de locuteurs (natifs + appris), c'est l'anglais qui est la lingua franca mondiale."},
+{cat:"💡 Curiosités",q:"Combien de fois le cœur humain adulte bat-il par minute en moyenne au repos ?",a:["70 fois","40 fois","100 fois","120 fois"],tip:"Entre 60 et 80 battements par minute au repos. Les sportifs de haut niveau descendent à 40 bpm. Le cœur bat 3 milliards de fois dans une vie."},
+{cat:"💡 Curiosités",q:"Quel est l'animal le plus tué par l'homme chaque année ?",a:["Poulet","Porc","Vache","Mouton"],tip:"Plus de 70 milliards de poulets sont abattus par an dans le monde. Ils représentent à eux seuls 70 % de tous les oiseaux vivant sur Terre actuellement."},
+{cat:"💡 Curiosités",q:"Quel est l'inventeur qui a déposé le plus de brevets ?",a:["Thomas Edison","Nikola Tesla","George Westinghouse","Alexander Graham Bell"],tip:"Edison dépose 1 093 brevets aux États-Unis. Il invente l'ampoule, le phonographe, le cinématographe et le premier réseau électrique."},
+{cat:"💡 Curiosités",q:"Quelle est la monnaie la plus utilisée pour les réserves internationales ?",a:["Dollar américain","Euro","Yuan chinois","Livre sterling"],tip:"Le dollar représente environ 60 % des réserves mondiales. L'euro est 2e avec 20 %. La domination du dollar date des accords de Bretton Woods en 1944."},
+{cat:"💡 Curiosités",q:"Quel est le sens du mot 'emoji' en japonais ?",a:["Image-caractère","Émotion-visage","Sentiment-signe","Dessin-code"],tip:"'E' = image, 'moji' = caractère. Les emojis sont créés par Shigetaka Kurita pour NTT DoCoMo en 1999. Le premier set comprend 176 emojis."},
+{cat:"💡 Curiosités",q:"Quelle est la couleur la plus visible par l'œil humain ?",a:["Jaune-vert","Rouge","Bleu","Orange"],tip:"Le jaune-vert (550 nm) correspond au pic de sensibilité des cellules cônes de l'œil. C'est pour ça que les gilets de sécurité et les extincteurs sont de cette couleur."},
+{cat:"💡 Curiosités",q:"Dans quel pays a-t-on inventé le papier ?",a:["Chine","Égypte","Mésopotamie","Inde"],tip:"Cai Lun invente le papier en Chine vers 105 apr. J.-C. Les Égyptiens utilisaient le papyrus, mais ce n'est pas du papier au sens technique. La route de la soie diffuse le papier en Europe au Moyen Âge."},
+{cat:"💡 Curiosités",q:"Quel est le nom du premier satellite artificiel lancé dans l'espace ?",a:["Spoutnik 1","Explorer 1","Vanguard","Sputnik 2"],tip:"Spoutnik 1 est lancé par l'URSS le 4 octobre 1957. Il émet un simple 'bip bip' captable par radio dans le monde entier — et déclenche la course à l'espace."},
+{cat:"💡 Curiosités",q:"Quelle est la substance naturelle la plus dure ?",a:["Diamant","Rubis","Saphir","Émeraude"],tip:"Le diamant est 10 sur l'échelle de Mohs. C'est du carbone pur cristallisé sous haute pression. Le seul outil qui coupe un diamant... c'est un autre diamant."},
+{cat:"💡 Curiosités",q:"Quelle ville est surnommée 'La Ville Éternelle' ?",a:["Rome","Athènes","Jérusalem","Istanbul"],tip:"Rome est surnommée ainsi car les Romains croyaient que leur ville ne mourrait jamais. Elle a été fondée en 753 av. J.-C. et a traversé 28 siècles d'histoire continue."},
+{cat:"💡 Curiosités",q:"Quelle est la profession d'origine de Christophe Colomb ?",a:["Navigateur et cartographe","Marchand de soie","Soldat","Notaire"],tip:"Colomb est né à Gênes vers 1451 et navigue dès ses 20 ans. Son projet de route vers les Indes est refusé par le Portugal avant d'être financé par l'Espagne."},
+{cat:"💡 Curiosités",q:"Quel est le premier aliment consommé sur la Lune ?",a:["Pain à communion","Café lyophilisé","Biscuits","Pâte à tartiner"],tip:"Buzz Aldrin prend la communion sur la Lune avec du pain et du vin. C'est le premier repas consommé sur un autre monde — un rite religieux privé, non officiel."},
+{cat:"💡 Curiosités",q:"Combien de marches compte la Tour Eiffel jusqu'au 2e étage ?",a:["674","300","1 000","500"],tip:"674 marches jusqu'au 2e étage, 1 665 jusqu'au sommet. Mais Gustave Eiffel lui-même prenait l'ascenseur — installé dès 1889."},
+{cat:"🔬 Sciences",q:"Qu'est-ce que l'ADN signifie ?",a:["Acide DésoxyriboNucléique","Acide Di-Nucléaire","Agent De Nutrition","Acide DiNucléoïde"],tip:"L'ADN contient l'intégralité des instructions génétiques d'un organisme. Si on déroulait l'ADN d'une seule cellule humaine, il mesurerait 2 mètres de long."},
+{cat:"🌍 Géographie",q:"Quel est le nom de l'océan entre l'Europe/Afrique et les Amériques ?",a:["Atlantique","Pacifique","Indien","Arctique"],tip:"L'Atlantique tient son nom d'Atlas, le titan grec condamné à porter le ciel. Il mesure 106 millions de km² et est traversé par des milliers de câbles internet sous-marins."},
+{cat:"🏛️ Histoire",q:"Quel pays a été le premier à envoyer un homme sur la Lune ?",a:["États-Unis","URSS","France","Chine"],tip:"Neil Armstrong et Buzz Aldrin posent le pied sur la Lune le 21 juillet 1969 (mission Apollo 11). Michael Collins reste en orbite dans le module de commande."},
 ];
 
-// ══════════════════════════════════════════════════════
-//  ÉTAT DU JEU
-// ══════════════════════════════════════════════════════
-let questions = [];
-let currentQ = 0;
-let score = 0;
-let lives = 3;
-let correctCount = 0;
-let wrongCount = 0;
-let totalRounds = 12;
-let timer = null;
-let timeLeft = 0;
-let answered = false;
 
-// ══════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-function confetti() {
-  const emojis = ['⭐','🌟','✨','🎉','🏆','💛'];
-  for (let i=0; i<14; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti-star';
-    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-    el.style.left = Math.random()*100+'vw';
-    el.style.top = '-30px';
-    el.style.animationDelay = Math.random()*0.8+'s';
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 2500);
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  DÉMARRAGE
-// ══════════════════════════════════════════════════════
-function startGame() {
-  totalRounds = parseInt(document.getElementById('select-rounds').value);
-  questions = shuffle(ALL_QUESTIONS).slice(0, totalRounds);
-  // Pour chaque question, on mélange les réponses mais on track le bon index
-  questions = questions.map(q => {
-    const opts = q.a.map((text,i) => ({text, isCorrect: i === q.correct}));
-    const shuffled = shuffle(opts);
-    return { ...q, opts: shuffled, tip: q.tip };
+let rounds=12,queue=[],cur=0,score=0,lives=3,nok=0,nko=0,streak=0,answered=false,tmr=null,tLeft=0;
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function burst(){const e=['⭐','✨','🌟','💛','🎉'];for(let i=0;i<10;i++){const d=document.createElement('div');d.className='star-b';d.textContent=e[Math.floor(Math.random()*e.length)];d.style.left=Math.random()*90+'vw';d.style.top=Math.random()*60+'vh';document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}}
+let selRounds=12;
+function selR(el,n){document.querySelectorAll('.cfg-opt').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');selRounds=n}
+function startGame(){
+  rounds=selRounds;
+  queue=shuffle(ALL_QUESTIONS).slice(0,rounds).map(q=>{
+    const opts=shuffle(q.a.map((t,i)=>({t,ok:i===0})));
+    return{...q,opts};
   });
-  currentQ = 0; score = 0; lives = 3; correctCount = 0; wrongCount = 0;
-  buildStrikes();
-  showScreen('screen-game');
-  showQuestion();
+  cur=0;score=0;lives=3;nok=0;nko=0;streak=0;
+  buildDots();show('game');renderQ();
 }
-
-// ══════════════════════════════════════════════════════
-//  STRIKES
-// ══════════════════════════════════════════════════════
-function buildStrikes() {
-  const row = document.getElementById('strikes-row');
-  row.innerHTML = '';
-  for (let i=0; i<totalRounds; i++) {
-    const div = document.createElement('div');
-    div.className = 'strike-icon' + (i===0?' current':'');
-    div.id = 'strike-'+i;
-    div.textContent = '⭐';
-    row.appendChild(div);
-  }
+function buildDots(){
+  const row=document.getElementById('dots');row.innerHTML='';
+  for(let i=0;i<rounds;i++){const d=document.createElement('div');d.className='dot'+(i===0?' cur':'');d.id='d'+i;row.appendChild(d);}
 }
-function updateStrikes() {
-  for (let i=0; i<totalRounds; i++) {
-    const el = document.getElementById('strike-'+i);
-    if (!el) continue;
-    el.classList.remove('done','current');
-    if (i < currentQ) el.classList.add('done');
-    else if (i === currentQ) el.classList.add('current');
-  }
+function updateDots(wasOk){
+  if(cur>0){const p=document.getElementById('d'+(cur-1));if(p)p.className='dot '+(wasOk?'ok':'ko');}
+  const c=document.getElementById('d'+cur);if(c)c.className='dot cur';
 }
-
-// ══════════════════════════════════════════════════════
-//  AFFICHAGE QUESTION
-// ══════════════════════════════════════════════════════
-function showQuestion() {
-  answered = false;
-  const q = questions[currentQ];
-  updateStrikes();
-
-  document.getElementById('hud-round').textContent  = `${currentQ+1} / ${totalRounds}`;
-  document.getElementById('hud-score').textContent  = score;
-  document.getElementById('hud-lives').textContent  = '❤️'.repeat(lives) + '🖤'.repeat(Math.max(0,3-lives));
-  document.getElementById('category-badge').textContent = q.cat;
-  document.getElementById('question-num').textContent = `Question ${currentQ+1} sur ${totalRounds}`;
-  document.getElementById('question-text').textContent = q.q;
-
-  const grid = document.getElementById('answers-grid');
-  grid.innerHTML = '';
-  const letters = ['A','B','C','D'];
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'answer-btn';
-    btn.innerHTML = `<span class="letter">${letters[i]}</span>${opt.text}`;
-    btn.onclick = () => handleAnswer(btn, opt.isCorrect, q.tip);
-    grid.appendChild(btn);
+function renderQ(){
+  answered=false;
+  const q=queue[cur];
+  document.getElementById('hq').textContent=`${cur+1}/${rounds}`;
+  document.getElementById('hs').textContent=score;
+  document.getElementById('hv').textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,3-lives));
+  document.getElementById('pb').style.width=((cur/rounds)*100)+'%';
+  document.getElementById('cat').textContent=q.cat;
+  document.getElementById('qm').textContent=`Question ${cur+1}`+(streak>=3?` · <span style="color:var(--gold)">🔥 Série ${streak}</span>`:'');
+  document.getElementById('qm').innerHTML=`Question ${cur+1}`+(streak>=3?` · <span class="streak-badge">🔥 ×${streak}</span>`:'');
+  document.getElementById('qt').textContent=q.q;
+  const grid=document.getElementById('ag');grid.innerHTML='';
+  const L=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='ans-btn';
+    b.innerHTML=`<span class="bdg">${L[i]}</span>${o.t}`;
+    b.onclick=()=>answer(b,o.ok,q.tip);grid.appendChild(b);
   });
-
-  document.getElementById('feedback').className = 'feedback-banner';
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('emilien-tip').className = 'emilien-tip';
-  document.getElementById('emilien-tip').textContent = '';
-
+  document.getElementById('fb').className='feedback';
+  document.getElementById('tb').className='tip-box';
   startTimer();
 }
-
-// ══════════════════════════════════════════════════════
-//  TIMER
-// ══════════════════════════════════════════════════════
-function startTimer() {
-  timeLeft = 20;
-  clearInterval(timer);
-  updateTimerBar();
-  timer = setInterval(() => {
-    timeLeft--;
-    updateTimerBar();
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      if (!answered) timeOut();
-    }
-  }, 1000);
+function startTimer(){tLeft=20;clearInterval(tmr);updT();tmr=setInterval(()=>{tLeft--;updT();if(tLeft<=0){clearInterval(tmr);if(!answered)timeOut();}},1000)}
+function updT(){const p=(tLeft/20)*100;document.getElementById('tf').style.width=p+'%';document.getElementById('tf').className='timer-fill'+(tLeft<=6?' urgent':'');document.getElementById('tn').textContent=tLeft}
+function timeOut(){
+  answered=true;lives--;nko++;streak=0;
+  document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);
+  hlCorrect();
+  const fb=document.getElementById('fb');fb.className='feedback show ko';
+  fb.innerHTML='⏰ Temps écoulé — La bonne réponse était : <strong>'+queue[cur].opts.find(o=>o.ok).t+'</strong>';
+  showTip(queue[cur].tip);
+  document.getElementById('hv').textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,3-lives));
+  updateDots(false);setTimeout(()=>next(false),2800);
 }
-function updateTimerBar() {
-  const bar = document.getElementById('timer-bar');
-  const pct = (timeLeft / 20) * 100;
-  bar.style.width = pct + '%';
-  bar.className = 'timer-bar' + (timeLeft <= 6 ? ' danger' : '');
-}
-function timeOut() {
-  answered = true;
-  lives--;
-  wrongCount++;
-  const fb = document.getElementById('feedback');
-  fb.className = 'feedback-banner show ko';
-  // Find correct answer
-  const q = questions[currentQ];
-  const correctText = q.opts.find(o=>o.isCorrect).text;
-  fb.innerHTML = `⏰ Temps écoulé ! La bonne réponse était : <strong>${correctText}</strong>`;
-  highlightCorrect();
-  showTip(q.tip);
-  updateHud();
-  setTimeout(nextOrEnd, 2800);
-}
-
-// ══════════════════════════════════════════════════════
-//  RÉPONSE
-// ══════════════════════════════════════════════════════
-function handleAnswer(btn, isCorrect, tip) {
-  if (answered) return;
-  answered = true;
-  clearInterval(timer);
-
-  const allBtns = document.querySelectorAll('.answer-btn');
-  allBtns.forEach(b => b.disabled = true);
-
-  const fb = document.getElementById('feedback');
-  if (isCorrect) {
-    btn.classList.add('correct');
-    correctCount++;
-    const points = Math.max(100, Math.floor((timeLeft/20)*300));
-    score += points;
-    fb.className = 'feedback-banner show ok';
-    fb.innerHTML = `✅ Excellent, Théo ! <strong>+${points} points</strong> 🌟`;
-    if (timeLeft >= 15) confetti();
+function answer(btn,isOk,tip){
+  if(answered)return;answered=true;clearInterval(tmr);
+  document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('fb');
+  if(isOk){
+    btn.classList.add('correct');streak++;nok++;
+    const pts=Math.max(80,Math.floor((tLeft/20)*250))+(streak>=3?50:0);
+    score+=pts;document.getElementById('hs').textContent=score;
+    fb.className='feedback show ok';
+    fb.innerHTML=`✅ Correct !${streak>=3?` <span class="streak-badge">🔥 ×${streak}</span>`:''} <strong>+${pts} pts</strong>`;
+    if(tLeft>=16)burst();
+    updateDots(true);
   } else {
-    btn.classList.add('wrong');
-    lives--;
-    wrongCount++;
-    fb.className = 'feedback-banner show ko';
-    const correctText = questions[currentQ].opts.find(o=>o.isCorrect).text;
-    fb.innerHTML = `❌ Raté ! La bonne réponse était : <strong>${correctText}</strong>`;
-    highlightCorrect();
+    btn.classList.add('wrong');lives--;nko++;streak=0;hlCorrect();
+    fb.className='feedback show ko';
+    fb.innerHTML='❌ Raté — La bonne réponse : <strong>'+queue[cur].opts.find(o=>o.ok).t+'</strong>';
+    document.getElementById('hv').textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,3-lives));
+    updateDots(false);
   }
-
-  showTip(tip);
-  document.getElementById('hud-score').textContent = score;
-  document.getElementById('hud-lives').textContent = '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(Math.max(0,3-lives));
-
-  setTimeout(nextOrEnd, 2500);
+  showTip(tip);setTimeout(()=>next(isOk),isOk?2200:2700);
 }
-function highlightCorrect() {
-  document.querySelectorAll('.answer-btn').forEach(b => {
-    if (b.querySelector('.letter') && !b.classList.contains('wrong')) {
-      // find the correct one
-    }
-  });
-  // find & highlight correct btn
-  const q = questions[currentQ];
-  const btns = document.querySelectorAll('.answer-btn');
-  btns.forEach((b,i) => {
-    if (q.opts[i].isCorrect) b.classList.add('correct');
-  });
+function hlCorrect(){document.querySelectorAll('.ans-btn').forEach((b,i)=>{if(queue[cur].opts[i]&&queue[cur].opts[i].ok)b.classList.add('correct')})}
+function showTip(tip){document.getElementById('ts').textContent=tip;document.getElementById('tb').className='tip-box show'}
+function next(wasOk){cur++;if(lives<=0||cur>=rounds){endGame();}else{renderQ();}}
+function endGame(){
+  clearInterval(tmr);document.getElementById('pb').style.width='100%';
+  const pct=Math.round((nok/rounds)*100);
+  let emoji,title,msg;
+  if(pct>=90){emoji='🏆';title='Niveau Émilien !';msg='<strong>Extraordinaire, Théo !</strong> Tu joues au niveau des grands champions. Jean-Luc Reichmann te tendrait le micro. Continue à nourrir ta curiosité — c\'est le secret d\'Émilien.';burst();setTimeout(burst,350);}
+  else if(pct>=70){emoji='⭐';title='Excellent !';msg='<strong>Très belle performance, Théo !</strong> Tu maîtrises bien ta culture générale. Quelques révisions sur les thèmes où tu as trébuché et tu seras inarrêtable.';burst();}
+  else if(pct>=50){emoji='📖';title='Bien joué !';msg='<strong>De bonnes bases, Théo !</strong> La culture générale se construit progressivement. Relis les anecdotes d\'Émilien après chaque question — elles sont là pour t\'apprendre quelque chose de nouveau.'}
+  else{emoji='🎓';title='Continue d\'apprendre !';msg='<strong>Ne lâche pas, Théo !</strong> Même Émilien a débuté à zéro. Chaque mauvaise réponse est une leçon retenue. Refais ce quiz dans quelques jours et observe ta progression !'}
+  document.getElementById('ee').textContent=emoji;
+  document.getElementById('et').textContent=title;
+  document.getElementById('escore').innerHTML=score+' <span>pts</span>';
+  document.getElementById('esub').textContent=`${rounds} questions · ${pct}% de réussite`;
+  document.getElementById('sok').textContent=nok;
+  document.getElementById('sko').textContent=nko;
+  document.getElementById('spct').textContent=pct+'%';
+  document.getElementById('emsg').innerHTML=msg;
+  show('endscreen');
 }
-function showTip(tip) {
-  const el = document.getElementById('emilien-tip');
-  el.className = 'emilien-tip show';
-  el.innerHTML = `💡 <strong>Émilien sait que :</strong> ${tip}`;
-}
-function updateHud() {
-  document.getElementById('hud-lives').textContent = '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(Math.max(0,3-lives));
-}
-function nextOrEnd() {
-  currentQ++;
-  if (lives <= 0 || currentQ >= totalRounds) {
-    endGame();
-  } else {
-    showQuestion();
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  FIN DE PARTIE
-// ══════════════════════════════════════════════════════
-function endGame() {
-  clearInterval(timer);
-  const pct = Math.round((correctCount / totalRounds) * 100);
-
-  let emoji, title, msg;
-  if (pct >= 90) {
-    emoji = '🏆'; title = 'NIVEAU ÉMILIEN !';
-    msg = `Incroyable Théo ! Tu as atteint le niveau du grand <strong>Émilien</strong> ! Tu domines la culture générale avec brio. Jean-Luc Reichmann serait fier de toi ! 🌟`;
-    confetti(); confetti();
-  } else if (pct >= 70) {
-    emoji = '⭐'; title = 'Très bien joué !';
-    msg = `Bravo Théo ! Tu as un excellent niveau de culture générale. Continue à apprendre comme Émilien et tu seras inarrêtable ! 💪`;
-    confetti();
-  } else if (pct >= 50) {
-    emoji = '📚'; title = 'Bon début !';
-    msg = `Pas mal Théo ! Tu as de bonnes bases. Émilien conseille : <strong>lis des encyclopédies, regarde des documentaires</strong> et reviens défier ce quiz ! 🎯`;
-  } else {
-    emoji = '🎓'; title = 'Continue d\'apprendre !';
-    msg = `Ne te décourage pas Théo ! Même Émilien a commencé quelque part. Relis les anecdotes de chaque question et refais le quiz — tu progresseras vite ! 💡`;
-  }
-
-  document.getElementById('end-emoji').textContent = emoji;
-  document.getElementById('end-title').textContent = title;
-  document.getElementById('end-score').innerHTML = `${score} <span>pts</span>`;
-  document.getElementById('stat-correct').textContent = correctCount;
-  document.getElementById('stat-wrong').textContent = wrongCount;
-  document.getElementById('stat-pct').textContent = pct + '%';
-  document.getElementById('end-msg').innerHTML = msg;
-
-  showScreen('screen-end');
-}
-
-function restartGame() { startGame(); }
-function goHome() { showScreen('screen-welcome'); }
+function goHome(){show('welcome')}
 </script>
 </body>
 </html>
